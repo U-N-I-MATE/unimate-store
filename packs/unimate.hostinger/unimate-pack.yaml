@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.hostinger
+version: 1.0.3
+name: {vi: "Hostinger"}
+description: {vi: "Quản lý hosting Hostinger ngay trong chat: xem tên miền và ngày hết hạn, sửa bản ghi DNS, xem website và WordPress, VPS, hộp thư, hoá đơn và gói đang chạy. MCP chính chủ của Hostinger, dán API token là xong."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/hostinger.json]

@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.supabase
+version: 1.0.0
+name: {vi: "Supabase"}
+description: {vi: "Quản lý Supabase qua MCP chính chủ: xem dự án, bảng, chạy SQL, tạo migration, deploy Edge Function, nhánh cơ sở dữ liệu, storage, đọc log và cảnh báo bảo mật, sinh kiểu TypeScript. Dán Personal Access Token là xong."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/supabase.json]

@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.github
+version: 1.0.2
+name: {vi: "GitHub"}
+description: {vi: "Làm việc với code trên GitHub qua MCP chính chủ: đọc và sửa file, tạo nhánh, đẩy commit, mở và trộn Pull Request, issue, review, xem và chạy GitHub Actions, đọc log CI, cảnh báo bảo mật. Bật đủ mọi bộ công cụ, dán Personal Access Token là xong."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.103.0"}
+provides:
+  connectors: [connectors/github.json]

@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.webcake-landing
+version: 1.0.1
+name: {vi: "Webcake Landing"}
+description: {vi: "Để AI tự thiết kế và sửa landing page Webcake bằng lời nói (tạo trang, sửa section, publish...). Chạy local qua npx, mỗi tài khoản 1 JWT."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/webcake-landing.json]

@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.gmail
+version: 1.0.0
+name: {vi: "Gmail"}
+description: {vi: "Gmail qua MCP chính chủ của Google: đọc và tìm thư, soạn NHÁP, gắn nhãn sắp xếp hộp thư. Server chính chủ KHÔNG có tool gửi thẳng - luôn dừng ở bản nháp để bạn tự bấm gửi. Cần tạo OAuth client + ghi danh Developer Preview của Google 1 lần."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/gmail.json]

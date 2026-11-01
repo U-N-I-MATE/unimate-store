@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.zernio
+version: 1.0.0
+name: {vi: "Zernio: Đăng bài đa kênh", en: "Zernio: Multi-channel posting"}
+description: {vi: "Một câu lệnh, đăng khắp mạng xã hội: UNI MATE soạn, lên lịch và đăng cùng lúc lên Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Threads, Pinterest và nhiều kênh khác qua MCP chính chủ của Zernio. Xem số liệu, giờ đăng tốt nhất, trả lời bình luận. Đăng ký miễn phí qua link của UNI MATE, dán API key là xong.", en: "One command, every network: UNI MATE writes, schedules and publishes to Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Threads, Pinterest and more through Zernio's official MCP. See analytics and best times to post, reply to comments. Sign up free through UNI MATE's link and paste an API key."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store/blob/main/huong-dan/zernio.md"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/zernio.json]

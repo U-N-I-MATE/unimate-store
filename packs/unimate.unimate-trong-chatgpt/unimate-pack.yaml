@@ -1,0 +1,30 @@
+# Gói "UNI MATE trong ChatGPT": chat trên chatgpt.com, ChatGPT gọi công cụ của UNI MATE.
+#
+# Tính năng này từng nằm trong lõi (0.64.21) và được đưa ra thành gói ở 0.64.26, vì UNI MATE giữ
+# mọi cuộc chat chung một nền tảng. Ai vẫn cần thì cài, và việc cài là lựa chọn có chủ ý.
+format: unimate-pack
+spec: 1
+
+id: unimate.unimate-trong-chatgpt
+version: 1.0.0
+
+name:
+  vi: UNI MATE trong ChatGPT
+  en: UNI MATE in ChatGPT
+description:
+  vi: Chat trên chatgpt.com bằng gói ChatGPT của bạn, và ChatGPT tự gọi công cụ của UNI MATE (số liệu, brain, nhắc lịch, Zalo). Cần UNI MATE 0.64.26 trở lên, mật khẩu quản trị và tên miền https.
+  en: Chat on chatgpt.com with your own ChatGPT plan while ChatGPT calls UNI MATE's tools (numbers, brain, reminders, Zalo). Needs UNI MATE 0.64.26 or newer, an admin password and an https domain.
+
+author:
+  name: UNI MATE
+license: MIT
+homepage: https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.unimate-trong-chatgpt
+
+# 0.64.26 mở `ctx.register_http` và `ctx.register_well_known` cho plugin. Bản cũ hơn thì gói
+# bị tắt kèm lý do đọc được, thay vì cài xong mà register() ném lỗi.
+compat:
+  app: ">=0.64.26"
+
+provides:
+  plugins:
+    - plugins/unimate-trong-chatgpt

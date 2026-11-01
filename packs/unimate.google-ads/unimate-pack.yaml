@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.google-ads
+version: 1.0.1
+name: {vi: "Google Ads"}
+description: {vi: "Số liệu Google Ads qua MCP chính chủ của Google (chỉ đọc): chiến dịch, chi phí, chuyển đổi, từ khoá qua truy vấn GAQL. Chạy local; cần developer token + Google Cloud, cài 1 lần hơi kỹ thuật."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/google-ads.json]

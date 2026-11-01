@@ -1,0 +1,12 @@
+format: unimate-pack
+spec: 1
+id: unimate.sapo
+version: 1.0.0
+name: {vi: "Sapo"}
+description: {vi: "Đơn hàng, sản phẩm, khách hàng, tồn kho, khuyến mãi và báo cáo doanh thu từ Sapo (Omni, Web). Tạo một ứng dụng riêng trong Sapo, dán API Key và API Secret là xong."}
+author: {name: UNI MATE}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  connectors: [connectors/sapo.json]
