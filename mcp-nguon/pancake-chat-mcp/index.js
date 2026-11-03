@@ -16,7 +16,7 @@
 
 "use strict";
 
-const VERSION = "1.1.0";
+const VERSION = "1.1.1";
 const PAGE_ID = String(process.env.PANCAKE_PAGE_ID || "").trim();
 const TOKEN = String(process.env.PANCAKE_PAGE_ACCESS_TOKEN || "").trim();
 const MAX_OUT = 60000; // characters of JSON handed back to the model per call

@@ -9,7 +9,7 @@
   "command": "npx",
   "args": [
     "-y",
-    "--package=https://raw.githubusercontent.com/U-N-I-MATE/unimate-store/main/mcp/pancake-chat-mcp-1.1.0.tgz",
+    "--package=https://raw.githubusercontent.com/U-N-I-MATE/unimate-store/main/mcp/pancake-chat-mcp-1.1.1.tgz",
     "pancake-chat-mcp"
   ],
   "ngoai_le_ban_chinh_thuc": "MCP do kho tự viết (mcp-nguon/pancake-chat-mcp) vì không có MCP Pancake hội thoại nào dùng được; không có bản npm nào để đi theo. Xem tools/mcp_dong_goi.py.",

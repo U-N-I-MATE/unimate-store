@@ -144,7 +144,7 @@
       "description": {
         "vi": "Hộp thư fanpage trên Pancake (pages.fm): đọc hội thoại, tin nhắn, bình luận, khách hàng, thẻ và thống kê nhân viên; gắn thẻ, phân công, ghi chú khách, trả lời khách bằng chữ hoặc ảnh. Mỗi page một kết nối, dán Page ID và Page Access Token là xong."
       },
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": {
         "name": "UNI MATE"
       },
@@ -154,7 +154,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-19",
+      "updated": "2026-11-03",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.pancake-chat",
       "icon": "packs/unimate.pancake-chat/assets/pancake-chat.png",
       "provides": {
@@ -163,9 +163,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-pancake-chat-1.1.0.zip",
-        "sha256": "64599dada3db76b55cedd3f4cb59745c82d36b1f99d3c680a1924851e3384d23",
-        "size": 8683
+        "url": "dist/unimate-pancake-chat-1.1.1.zip",
+        "sha256": "da940402ad7251600ea2e799dfa35d054323014c8dd014de47b533d0f35eeb2b",
+        "size": 8681
       }
     },
     {
