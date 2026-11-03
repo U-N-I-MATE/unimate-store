@@ -2330,7 +2330,7 @@
       "description": {
         "vi": "Làm việc với code trên GitHub qua MCP chính chủ: đọc và sửa file, tạo nhánh, đẩy commit, mở và trộn Pull Request, issue, review, xem và chạy GitHub Actions, đọc log CI, cảnh báo bảo mật. Bật đủ mọi bộ công cụ, dán Personal Access Token là xong."
       },
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "UNI MATE"
       },
@@ -2340,7 +2340,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-13",
+      "updated": "2026-11-03",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.github",
       "icon": "packs/unimate.github/assets/github.png",
       "provides": {
@@ -2349,9 +2349,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-github-1.0.2.zip",
-        "sha256": "30efc1807ef37847b64ca00c93b8f1dc8ad2dc8e0db68f4f806a5b2fb541a58c",
-        "size": 9626
+        "url": "dist/unimate-github-1.0.3.zip",
+        "sha256": "79e5b1f3b9e07d353fdfa75b7130d66fd5bcf9964846789c47fe138dbd05c077",
+        "size": 9663
       }
     },
     {
