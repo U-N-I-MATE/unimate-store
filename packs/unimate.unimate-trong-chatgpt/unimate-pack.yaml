@@ -6,14 +6,14 @@ format: unimate-pack
 spec: 1
 
 id: unimate.unimate-trong-chatgpt
-version: 1.0.0
+version: 1.1.0
 
 name:
   vi: UNI MATE trong ChatGPT
   en: UNI MATE in ChatGPT
 description:
-  vi: Chat trên chatgpt.com bằng gói ChatGPT của bạn, và ChatGPT tự gọi công cụ của UNI MATE (số liệu, brain, nhắc lịch, Zalo). Cần UNI MATE 0.64.26 trở lên, mật khẩu quản trị và tên miền https.
-  en: Chat on chatgpt.com with your own ChatGPT plan while ChatGPT calls UNI MATE's tools (numbers, brain, reminders, Zalo). Needs UNI MATE 0.64.26 or newer, an admin password and an https domain.
+  vi: Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, và ChatGPT hay Claude tự gọi công cụ của UNI MATE (số liệu, brain, nhắc lịch, Zalo), đọc hội thoại của bạn và ghi lại điều đã chốt. Cần UNI MATE 0.64.26 trở lên (đọc, ghi hội thoại cần 0.441.0), mật khẩu quản trị và tên miền https.
+  en: Chat on chatgpt.com or claude.ai with your own plan while ChatGPT or Claude calls UNI MATE's tools (numbers, brain, reminders, Zalo), reads your chats and records what you settled. Needs UNI MATE 0.64.26 or newer (chat reading and recording need 0.441.0), an admin password and an https domain.
 
 author:
   name: UNI MATE

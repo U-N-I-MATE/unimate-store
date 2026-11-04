@@ -14,11 +14,17 @@ Phần suy nghĩ chạy bằng gói ChatGPT của bạn, **không tốn hạn m�
 |---|---|---|
 | Plugin | `unimate-trong-chatgpt` | Cửa OAuth và địa chỉ MCP cho ChatGPT, cùng một trang cài đặt riêng |
 
-Gói không thêm tool mới. ChatGPT dùng đúng bộ công cụ UNI MATE đã có (kết nối MCP, brain, nhắc lịch, Kanban, plugin), với mức quyền bạn chọn.
+ChatGPT dùng đúng bộ công cụ UNI MATE đã có (kết nối MCP, brain, nhắc lịch, Kanban, plugin), với mức quyền bạn chọn. Từ bản 1.1.0 có thêm ba công cụ **chỉ ChatGPT nối qua gói này mới thấy** (các engine khác của UNI MATE không thấy):
+
+| Công cụ | Việc | Mức tối thiểu |
+|---|---|---|
+| `unimate_gate_list_chats` | Liệt kê hội thoại gần nhất của bạn với UNI MATE | Chỉ đọc |
+| `unimate_gate_read_chat` | Đọc tin của một hội thoại | Chỉ đọc |
+| `unimate_gate_record_note` | Ghi lại điều đã chốt thành hội thoại mới "Từ ChatGPT: ..." | Ghi nháp |
 
 ## Cần có gì
 
-- **UNI MATE 0.64.26 trở lên.** Bản cũ hơn thì gói bị tắt kèm lý do ngay lúc cài.
+- **UNI MATE 0.64.26 trở lên.** Bản cũ hơn thì gói bị tắt kèm lý do ngay lúc cài. Ba công cụ đọc, ghi hội thoại cần **0.441.0** trở lên; bản cũ hơn thì gói vẫn chạy, chỉ thiếu ba công cụ đó.
 - **Gói ChatGPT** Plus, Pro, Business (Team), Enterprise hoặc Edu. Gói miễn phí không có tính năng này.
 - **Máy tính.** Bước cài đặt (Developer mode) chỉ làm được trên bản web chatgpt.com, không làm được trong app điện thoại.
 - **UNI MATE có địa chỉ https.** ChatGPT không nhận địa chỉ kiểu `http://12.34.56.78:7777`. Gắn tên miền riêng trước (Cài đặt, mục Giọng nói, thương hiệu và truy cập).
@@ -75,8 +81,24 @@ Trong khung chat của ChatGPT, bấm dấu **+** (hoặc biểu tượng công 
 - "Dùng UNI MATE: có những công cụ gì?"
 - "Doanh thu tuần này so với tuần trước thế nào?"
 - "Nhắc tôi 8 giờ sáng mai gọi nhà cung cấp."
+- "Hôm qua tôi bàn gì với UNI MATE về khuyến mãi Tết? Đọc lại giúp tôi."
+- "Ghi lại vào UNI MATE: chốt ngân sách Tết 50 triệu, khuyến mãi 10% từ 20/01."
 
 Mỗi lần ChatGPT định làm một việc có tác động thật (gửi tin, tạo đơn...), nó sẽ **hỏi bạn xác nhận** trước khi gọi.
+
+---
+
+## Dùng với Claude.ai (từ bản 1.1.0)
+
+Cùng địa chỉ ở bước 1 cũng nối được vào **Claude.ai** (web, Desktop, điện thoại), bằng gói Claude của bạn.
+
+1. Trên claude.ai vào **Settings, Connectors**, bấm **Add custom connector**.
+2. Ô **Remote MCP server URL**: dán địa chỉ đã chép ở bước 1. Không cần điền Client ID.
+3. Bấm **Add**, rồi **Connect**. Trang Cho phép của UNI MATE hiện ra, làm như bước 5.
+
+Gói Team, Enterprise thì chủ tổ chức phải thêm connector trước. Tên các mục có thể hơi khác theo phiên bản Claude.
+
+Mức quyền và nút **Ngắt mọi kết nối** dùng chung cho cả ChatGPT và Claude. Điều chốt bên Claude được ghi thành hội thoại **"Từ Claude: ..."**.
 
 ---
 
@@ -86,11 +108,15 @@ Chọn trên trang của gói (trang Plugin, nút **Mở trang**). Đổi xong c
 
 | Mức | ChatGPT được làm gì |
 |---|---|
-| **Toàn quyền** (mặc định) | Đọc dữ liệu và làm việc thật: gửi tin, tạo đơn, đăng bài |
-| **Tự làm có giới hạn** | Đọc dữ liệu và viết nháp, không làm việc ra bên ngoài |
-| **Chỉ đọc và gợi ý** | Chỉ đọc, không ghi file, không làm việc ra bên ngoài |
+| **Chỉ đọc** | Đọc dữ liệu và hội thoại của bạn. Không ghi gì, không làm việc ra bên ngoài |
+| **Ghi nháp** (mặc định) | Như Chỉ đọc, cộng viết nháp và ghi lại điều đã chốt thành hội thoại. Không làm việc ra bên ngoài |
+| **Toàn quyền** | Như Ghi nháp, cộng làm việc thật: gửi tin, tạo đơn, đăng bài |
 
 UNI MATE tự chặn ở phía mình theo mức đã chọn. ChatGPT không tự nâng quyền được.
+
+Từ bản 1.1.0, cài mới bắt đầu ở **Ghi nháp**. Muốn ChatGPT làm việc thật ra bên ngoài thì tự chọn Toàn quyền trên trang của gói. Ai đã cài và kết nối từ bản 1.0.0 thì **giữ nguyên mức đang chạy** (bản 1.0.0 mặc định Toàn quyền), không bị hạ giữa chừng.
+
+**Hội thoại nào ChatGPT đọc được:** chỉ hội thoại của chính bạn với UNI MATE trong brain đang mở (dashboard, Telegram, Zalo cá nhân, chat với trợ lý). **Không bao giờ** hội thoại khách hàng, nhóm Zalo hay Team.
 
 ## Ngắt kết nối
 
@@ -102,7 +128,7 @@ UNI MATE tự chặn ở phía mình theo mức đã chọn. ChatGPT không tự
 
 ## Điều cần biết trước
 
-- **Bạn chat trong ChatGPT, không phải trong UNI MATE.** Cuộc chat nằm ở lịch sử của ChatGPT, không vào trí nhớ hay lịch sử chat của UNI MATE.
+- **Bạn chat trong ChatGPT, không phải trong UNI MATE.** Cuộc chat nằm ở lịch sử của ChatGPT. Muốn UNI MATE nhớ điều gì thì bảo ChatGPT "ghi lại vào UNI MATE": nó tạo một hội thoại "Từ ChatGPT: ..." trong UNI MATE, vào lịch sử chat và được UNI MATE tự học như mọi lượt chat. Việc ghi này không chạy model, không tốn lượt.
 - **Việc nền vẫn chạy bằng model của UNI MATE.** Nhắc lịch tự chạy, vòng lặp, bot Telegram không có ai gõ vào ChatGPT, nên chúng vẫn dùng model bạn chọn ở trang Models.
 - **UNI MATE làm việc trên brain đang mở gần nhất** (brain của cuộc trò chuyện gần nhất trên dashboard). Kết quả mỗi công cụ có ghi rõ đang ở brain nào.
 - **Developer mode là tính năng OpenAI còn gắn nhãn thử nghiệm.** Giao diện và tên mục của nó có thể đổi.
@@ -122,6 +148,6 @@ UNI MATE tự chặn ở phía mình theo mức đã chọn. ChatGPT không tự
 ## An toàn
 
 - Token chỉ lưu dạng băm trong thư mục dữ liệu riêng của gói, không nằm trong brain.
-- ChatGPT chỉ được quay về đúng máy của OpenAI (`chatgpt.com`, `*.openai.com`). Kẻ gian tự đăng ký một kết nối trỏ về máy mình sẽ không nhận được mã.
+- ChatGPT chỉ được quay về đúng máy của OpenAI (`chatgpt.com`, `*.openai.com`). Claude chỉ được quay về đúng **một** địa chỉ Anthropic công bố trong tài liệu kết nối: `https://claude.ai/api/mcp/auth_callback`, so khớp nguyên văn, không nhận địa chỉ con hay tên miền khác. Kẻ gian tự đăng ký một kết nối trỏ về máy mình sẽ không nhận được mã.
 - Token của gói này tách hẳn khỏi token Claude Code và Codex dùng. Ngắt bên này không ảnh hưởng bên kia.
 - Refresh token xoay vòng: một token cũ bị dùng lại là UNI MATE thu hồi cả chuỗi và bắt cho phép lại.
