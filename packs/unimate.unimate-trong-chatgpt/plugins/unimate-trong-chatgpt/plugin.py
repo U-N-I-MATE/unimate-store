@@ -34,6 +34,9 @@ Ranh giới an toàn
   Ghi nháp (auto); bản đã cài giữ mức đang chạy.
 - 1.1.0 thêm ba tool chỉ cửa này có: liệt kê, đọc hội thoại của chủ và ghi lại điều đã chốt thành
   hội thoại "Từ ChatGPT: ..." (mục "Hội thoại của chủ" bên dưới; cần UNI MATE 0.441.0).
+- 1.2.0 thêm hai tool GỬI tin vào một hội thoại ở khung Trò chuyện chính như chủ gõ, và đọc câu trả
+  lời. CHỈ ở mức Toàn quyền: một lượt chat của chủ chạy với quyền của chủ, nên mức thấp hơn mà gửi
+  được là đi vòng qua chính mức đó. Cần UNI MATE 0.446.0; lõi cũ hơn thì hai tool này không hiện.
 - Các cửa máy chủ OpenAI gọi (đổi token, MCP...) khai `no_cookie`: lõi UNI MATE gỡ cookie trước
   khi giao request cho gói, nên không trang lạ nào mượn được phiên của chủ qua đó.
 """
@@ -456,16 +459,20 @@ def so_ket_noi(ctx) -> int:
 # mình và tự xử lý tools/call của chúng, không đăng ký qua `ctx.register_tool` (tool plugin hiện ra
 # cho MỌI engine của UNI MATE, kể cả Claude Code của chủ, và ở đó chúng vô nghĩa).
 #
-# Mức quyền: Chỉ đọc thấy hai tool đọc; Ghi nháp và Toàn quyền thấy thêm tool ghi. Ngoài danh sách,
-# lúc gọi còn kiểm lại mức (đọc từng lượt), nên AI gọi thẳng tên tool cũng không lách được.
-# Hội thoại nào được đọc là việc của `gate_api` ở lõi: chỉ hội thoại của chủ, không bao giờ hội
-# thoại khách, nhóm Zalo hay Team.
+# Mức quyền: Chỉ đọc thấy hai tool đọc; Ghi nháp và Toàn quyền thấy thêm tool ghi; CHỈ Toàn quyền
+# thấy hai tool gửi tin và đọc kết quả (1.2.0, cần UNI MATE 0.446.0). Ngoài danh sách, lúc gọi còn
+# kiểm lại mức (đọc từng lượt), nên AI gọi thẳng tên tool cũng không lách được.
+# Hội thoại nào được đọc, được gửi là việc của `gate_api` ở lõi: đọc chỉ hội thoại của chủ, gửi chỉ
+# vào khung Trò chuyện chính (chủ chốt 04/11/2026), không bao giờ hội thoại khách, nhóm Zalo hay Team.
 
 T_DANH_SACH = "unimate_gate_list_chats"
 T_DOC = "unimate_gate_read_chat"
 T_GHI = "unimate_gate_record_note"
+T_GUI = "unimate_gate_send_chat"
+T_KET_QUA = "unimate_gate_chat_result"
 _BAC = {"suggest": 0, "auto": 1, "full": 2}
-_MUC_TOI_THIEU = {T_DANH_SACH: "suggest", T_DOC: "suggest", T_GHI: "auto"}
+_MUC_TOI_THIEU = {T_DANH_SACH: "suggest", T_DOC: "suggest", T_GHI: "auto", T_GUI: "full", T_KET_QUA: "full"}
+_TOOL_GUI = (T_GUI, T_KET_QUA)   # cần `gate_api.send_chat` (UNI MATE 0.446.0)
 
 _TOOL_CONG = {
     T_DANH_SACH: {
@@ -500,6 +507,29 @@ _TOOL_CONG = {
             "note": {"type": "string", "description": "Nội dung đã chốt, tối đa 20.000 ký tự."},
             "asked": {"type": "string", "description": "Câu chủ hỏi ban đầu (tuỳ chọn)."}}},
     },
+    T_GUI: {
+        "description": (
+            "Gửi MỘT tin vào một hội thoại ở khung Trò chuyện chính của UNI MATE (id lấy từ "
+            f"{T_DANH_SACH}, kênh web), như chủ tự gõ: UNI MATE chạy một lượt chat thật trong hội thoại "
+            "đó, dùng bộ não, công cụ và quyền của chủ. Chỉ dùng khi chủ bảo gửi, giao hay nhờ UNI MATE "
+            "làm việc trong hội thoại đó. Hội thoại đang trả lời dở thì tin thành tin gõ thêm. Không gửi "
+            "được vào hội thoại với Cộng sự, Telegram, Zalo, khách hàng, nhóm hay Team. Xong gọi "
+            f"{T_KET_QUA} với chat_id và after_id trả về để lấy câu trả lời."),
+        "inputSchema": {"type": "object", "required": ["chat_id", "message"], "properties": {
+            "chat_id": {"type": "string", "description": "id hội thoại ở khung Trò chuyện chính."},
+            "message": {"type": "string", "description": "Nội dung gửi, tối đa 7.000 ký tự."}}},
+    },
+    T_KET_QUA: {
+        "description": (
+            f"Chờ UNI MATE trả lời tin vừa gửi bằng {T_GUI} (tối đa wait giây, mặc định 25, tối đa 50) rồi "
+            "trả câu trả lời. status = done: có câu trả lời; running: UNI MATE vẫn đang làm, gọi lại với "
+            "cùng after_id; no_answer: lượt đã dừng hoặc lỗi, đọc lại hội thoại để xem."),
+        "inputSchema": {"type": "object", "required": ["chat_id", "after_id"], "properties": {
+            "chat_id": {"type": "string", "description": "id hội thoại đã gửi."},
+            "after_id": {"type": "integer", "description": f"after_id do {T_GUI} trả về."},
+            "wait": {"type": "integer", "minimum": 0, "maximum": 50,
+                     "description": "Số giây chờ tối đa, mặc định 25."}}},
+    },
 }
 
 
@@ -516,11 +546,18 @@ def du_muc(muc: str, ten: str) -> bool:
     return _BAC.get(muc, -1) >= _BAC[_MUC_TOI_THIEU[ten]]
 
 
+def co_gui(G) -> bool:
+    """Lõi có phần gửi tin vào hội thoại (UNI MATE 0.446.0) không."""
+    return G is not None and hasattr(G, "send_chat") and hasattr(G, "chat_result")
+
+
 def tool_cong(muc: str) -> list:
     """Định nghĩa tool (dạng MCP) mà AI nối qua cửa này được thấy ở mức `muc`."""
-    if _gate() is None:
+    G = _gate()
+    if G is None:
         return []
-    return [{"name": ten, **dn} for ten, dn in _TOOL_CONG.items() if du_muc(muc, ten)]
+    return [{"name": ten, **dn} for ten, dn in _TOOL_CONG.items()
+            if du_muc(muc, ten) and (ten not in _TOOL_GUI or co_gui(G))]
 
 
 def nguon_cua_client(ctx, rec: dict) -> str:
@@ -547,11 +584,16 @@ def _so(v, mac_dinh: int) -> int:
 
 
 async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple:
-    """(văn bản, là_lỗi) cho một lượt gọi một trong ba tool."""
+    """(văn bản, là_lỗi) cho một lượt gọi một trong các tool của cửa."""
     G = _gate()
     if G is None:
         return "ERROR: UNI MATE trên máy chủ cũ hơn 0.441.0, chưa có phần đọc và ghi hội thoại.", True
+    if ten in _TOOL_GUI and not co_gui(G):
+        return "ERROR: UNI MATE trên máy chủ cũ hơn 0.446.0, chưa có phần gửi tin vào hội thoại.", True
     if not du_muc(muc, ten):
+        if ten in _TOOL_GUI:
+            return (f"ERROR: Gửi tin vào hội thoại chỉ có ở mức Toàn quyền (đang là {_TEN_MUC.get(muc, muc)}). "
+                    "Chủ đổi mức ở trang của gói UNI MATE trong ChatGPT."), True
         return (f"ERROR: Mức quyền hiện tại ({_TEN_MUC.get(muc, muc)}) không cho ghi. Chủ đổi mức ở trang "
                 "của gói UNI MATE trong ChatGPT."), True
     brain = _brain_dang_mo()
@@ -564,6 +606,13 @@ async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple
             out = {"chats": kq}
         elif ten == T_DOC:
             out = G.read_chat(str(args.get("chat_id") or ""), brain, limit=_so(args.get("limit"), 30))
+        elif ten == T_GUI:
+            out = await G.send_chat(str(args.get("chat_id") or ""), brain, str(args.get("message") or ""),
+                                    nguon_cua_client(ctx, rec))
+            out["huong_dan"] = (f"Đã gửi. Gọi {T_KET_QUA} với chat_id và after_id này để lấy câu trả lời.")
+        elif ten == T_KET_QUA:
+            out = await G.chat_result(str(args.get("chat_id") or ""), brain, after_id=_so(args.get("after_id"), 0),
+                                      wait=_so(args.get("wait"), 25))
         else:
             out = await G.record_note(brain, nguon_cua_client(ctx, rec), str(args.get("title") or ""),
                                       str(args.get("note") or ""), asked=str(args.get("asked") or ""))
