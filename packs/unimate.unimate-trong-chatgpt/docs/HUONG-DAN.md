@@ -21,10 +21,12 @@ ChatGPT dùng đúng bộ công cụ UNI MATE đã có (kết nối MCP, brain, 
 | `unimate_gate_list_chats` | Liệt kê hội thoại gần nhất của bạn với UNI MATE | Chỉ đọc |
 | `unimate_gate_read_chat` | Đọc tin của một hội thoại | Chỉ đọc |
 | `unimate_gate_record_note` | Ghi lại điều đã chốt thành hội thoại mới "Từ ChatGPT: ..." | Ghi nháp |
+| `unimate_gate_send_chat` | Gửi một tin vào hội thoại ở khung Trò chuyện chính, như bạn tự gõ (từ 1.2.0) | Toàn quyền |
+| `unimate_gate_chat_result` | Lấy câu trả lời của UNI MATE cho tin vừa gửi (từ 1.2.0) | Toàn quyền |
 
 ## Cần có gì
 
-- **UNI MATE 0.64.26 trở lên.** Bản cũ hơn thì gói bị tắt kèm lý do ngay lúc cài. Ba công cụ đọc, ghi hội thoại cần **0.441.0** trở lên; bản cũ hơn thì gói vẫn chạy, chỉ thiếu ba công cụ đó.
+- **UNI MATE 0.64.26 trở lên.** Bản cũ hơn thì gói bị tắt kèm lý do ngay lúc cài. Ba công cụ đọc, ghi hội thoại cần **0.441.0** trở lên; hai công cụ gửi tin cần **0.446.0** trở lên. Bản cũ hơn thì gói vẫn chạy, chỉ thiếu các công cụ đó.
 - **Gói ChatGPT** Plus, Pro, Business (Team), Enterprise hoặc Edu. Gói miễn phí không có tính năng này.
 - **Máy tính.** Bước cài đặt (Developer mode) chỉ làm được trên bản web chatgpt.com, không làm được trong app điện thoại.
 - **UNI MATE có địa chỉ https.** ChatGPT không nhận địa chỉ kiểu `http://12.34.56.78:7777`. Gắn tên miền riêng trước (Cài đặt, mục Giọng nói, thương hiệu và truy cập).
@@ -87,6 +89,15 @@ Trong khung chat của ChatGPT, bấm dấu **+** (hoặc biểu tượng công 
 Mỗi lần ChatGPT định làm một việc có tác động thật (gửi tin, tạo đơn...), nó sẽ **hỏi bạn xác nhận** trước khi gọi.
 
 ---
+
+## Gửi tin vào hội thoại (từ bản 1.2.0)
+
+Ở mức **Toàn quyền**, ChatGPT hoặc Claude gửi được một tin vào một hội thoại ở **khung Trò chuyện chính** của UNI MATE, như bạn tự gõ. UNI MATE trả lời ngay trong hội thoại đó: chữ chạy trên mọi tab đang mở, có nút Dừng, lưu vào Lịch sử và vòng tự học. Bong bóng tin ghi "Gửi từ ChatGPT" hoặc "Gửi từ Claude".
+
+- Ví dụ: "Gửi cho UNI MATE trong hội thoại Kế hoạch tháng 11: lên danh sách việc tuần này, rồi đọc cho tôi câu trả lời."
+- Hội thoại đang trả lời dở thì tin thành tin gõ thêm, như khi bạn gõ thêm lúc UNI MATE đang làm.
+- Chỉ khung Trò chuyện chính. Hội thoại với Cộng sự, Telegram, Zalo chỉ đọc. Hội thoại khách hàng, nhóm Zalo, Team thì không bao giờ đọc hay gửi được.
+- Mức Ghi nháp và Chỉ đọc không thấy hai công cụ này.
 
 ## Dùng với Claude.ai (từ bản 1.1.0)
 
