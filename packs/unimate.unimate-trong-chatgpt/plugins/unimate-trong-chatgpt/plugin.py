@@ -29,7 +29,10 @@ Ranh giới an toàn
 - Token, mã cấp quyền chỉ lưu dạng BĂM SHA-256. Tệp lộ ra không dùng được để gọi.
 - Token của cửa này KHÔNG phải `hub_token` của Claude Code/Codex, và ngược lại.
 - Mức quyền (full / auto / suggest) chủ chọn trên trang của gói; hub ép ở lớp cứng như mọi
-  engine khác, đọc lại TỪNG lượt gọi nên hạ quyền có hiệu lực ngay.
+  engine khác, đọc lại TỪNG lượt gọi nên hạ quyền có hiệu lực ngay. Từ 1.1.0 cài mới mặc định
+  Ghi nháp (auto); bản đã cài giữ mức đang chạy.
+- 1.1.0 thêm ba tool chỉ cửa này có: liệt kê, đọc hội thoại của chủ và ghi lại điều đã chốt thành
+  hội thoại "Từ ChatGPT: ..." (mục "Hội thoại của chủ" bên dưới; cần UNI MATE 0.441.0).
 - Các cửa máy chủ OpenAI gọi (đổi token, MCP...) khai `no_cookie`: lõi UNI MATE gỡ cookie trước
   khi giao request cho gói, nên không trang lạ nào mượn được phiên của chủ qua đó.
 """
@@ -52,7 +55,10 @@ TTL_YEU_CAU = 600                   # trang Cho phép mở quá 10 phút thì b�
 MAX_CLIENT = 20                     # chặn ai đó đăng ký client tới đầy đĩa
 MAX_YEU_CAU = 100
 MUC_QUYEN = ("full", "auto", "suggest")
-MUC_MAC_DINH = "full"               # quyết định 2026-09-10 của chủ repo: UNI MATE tự làm
+# 1.1.0 (quyết định của chủ 04/11/2026): cài mới mặc định Ghi nháp. Muốn Toàn quyền thì tự bật trên
+# trang của gói. Bản đã cài từ trước giữ nguyên mức đang chạy (xem `_giu_muc_ban_cu`).
+MUC_MAC_DINH = "auto"
+MUC_BAN_CU = "full"                 # mặc định của 1.0.0
 
 _HOST_REDIRECT = ("chatgpt.com", "chat.openai.com")
 _DUOI_REDIRECT = (".chatgpt.com", ".openai.com")
@@ -177,6 +183,25 @@ def dat_muc_quyen(ctx, m: str) -> bool:
         d["muc_quyen"] = m
         _ghi_json(ctx.data_dir / "cai-dat.json", d)
     return True
+
+
+def _giu_muc_ban_cu(ctx) -> None:
+    """Chạy MỘT lần, lúc bản 1.1.0 trở lên nạp lần đầu.
+
+    Bản 1.0.0 không ghi mức nào khi chủ chưa từng chọn, nó chạy theo mặc định cũ (Toàn quyền). Có
+    `kho.json` nghĩa là gói đã từng kết nối, tức là ChatGPT đang làm việc ở Toàn quyền: ghi hẳn mức đó
+    ra để bản mới không tự hạ quyền giữa chừng. Cài mà chưa kết nối lần nào thì chưa có gì để giữ, nhận
+    mặc định mới. Dấu `muc_da_chot` chặn chạy lại: kết nối lần đầu SAU khi lên 1.1.0 không bị tính là
+    bản cũ."""
+    p = ctx.data_dir / "cai-dat.json"
+    with _KHOA:
+        d = _doc_json(p, {})
+        if d.get("muc_da_chot"):
+            return
+        if d.get("muc_quyen") not in MUC_QUYEN and (ctx.data_dir / "kho.json").is_file():
+            d["muc_quyen"] = MUC_BAN_CU
+        d["muc_da_chot"] = True
+        _ghi_json(p, d)
 
 
 def _doc(ctx) -> dict:
@@ -411,6 +436,174 @@ def so_ket_noi(ctx) -> int:
 
 
 # ============================================================
+# Hội thoại của chủ (1.1.0, cần UNI MATE 0.441.0: server/gate_api.py)
+# ============================================================
+# Ba tool này CHỈ AI nối qua cửa này thấy: gói chèn chúng vào câu trả lời tools/list của chính cửa
+# mình và tự xử lý tools/call của chúng, không đăng ký qua `ctx.register_tool` (tool plugin hiện ra
+# cho MỌI engine của UNI MATE, kể cả Claude Code của chủ, và ở đó chúng vô nghĩa).
+#
+# Mức quyền: Chỉ đọc thấy hai tool đọc; Ghi nháp và Toàn quyền thấy thêm tool ghi. Ngoài danh sách,
+# lúc gọi còn kiểm lại mức (đọc từng lượt), nên AI gọi thẳng tên tool cũng không lách được.
+# Hội thoại nào được đọc là việc của `gate_api` ở lõi: chỉ hội thoại của chủ, không bao giờ hội
+# thoại khách, nhóm Zalo hay Team.
+
+T_DANH_SACH = "unimate_gate_list_chats"
+T_DOC = "unimate_gate_read_chat"
+T_GHI = "unimate_gate_record_note"
+_BAC = {"suggest": 0, "auto": 1, "full": 2}
+_MUC_TOI_THIEU = {T_DANH_SACH: "suggest", T_DOC: "suggest", T_GHI: "auto"}
+
+_TOOL_CONG = {
+    T_DANH_SACH: {
+        "description": (
+            "Liệt kê các hội thoại gần nhất của chủ với UNI MATE trong brain đang mở, mới nhất trước: "
+            "chat trên dashboard, Telegram, Zalo cá nhân và với trợ lý (agent). Không có hội thoại khách "
+            "hàng, nhóm Zalo hay Team. Trả id, tiêu đề, kênh, lúc cập nhật, số tin. Dùng id với "
+            f"{T_DOC} để đọc."),
+        "inputSchema": {"type": "object", "properties": {
+            "query": {"type": "string", "description": "Lọc theo chữ trong tiêu đề hoặc đoạn đầu (tuỳ chọn)."},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 50,
+                      "description": "Số hội thoại, mặc định 20, tối đa 50."}}},
+    },
+    T_DOC: {
+        "description": (
+            "Đọc các tin gần nhất của MỘT hội thoại của chủ (id lấy từ "
+            f"{T_DANH_SACH}), cũ trước mới sau. has_more = true nghĩa là còn tin cũ hơn chưa trả."),
+        "inputSchema": {"type": "object", "required": ["chat_id"], "properties": {
+            "chat_id": {"type": "string", "description": "id hội thoại."},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 100,
+                      "description": "Số tin, mặc định 30, tối đa 100."}}},
+    },
+    T_GHI: {
+        "description": (
+            "Ghi lại điều chủ vừa CHỐT ở đây thành một hội thoại mới trong UNI MATE, tiêu đề "
+            "\"Từ ChatGPT: ...\" (hoặc \"Từ Claude: ...\"), để UNI MATE nhớ và tự học như một lượt chat "
+            "bình thường. Không chạy model, không tốn lượt. Chỉ dùng khi chủ bảo ghi lại, lưu lại hay "
+            "báo cho UNI MATE. Viết note là kết quả đã chốt (số liệu, quyết định, việc cần làm), không chép "
+            "cả cuộc trò chuyện."),
+        "inputSchema": {"type": "object", "required": ["title", "note"], "properties": {
+            "title": {"type": "string", "description": "Tiêu đề ngắn, tối đa 120 ký tự."},
+            "note": {"type": "string", "description": "Nội dung đã chốt, tối đa 20.000 ký tự."},
+            "asked": {"type": "string", "description": "Câu chủ hỏi ban đầu (tuỳ chọn)."}}},
+    },
+}
+
+
+def _gate():
+    """Module `gate_api` của lõi, hoặc None khi UNI MATE cũ hơn 0.441.0 (gói vẫn chạy, chỉ thiếu ba tool)."""
+    try:
+        import gate_api
+        return gate_api
+    except Exception:
+        return None
+
+
+def du_muc(muc: str, ten: str) -> bool:
+    return _BAC.get(muc, -1) >= _BAC[_MUC_TOI_THIEU[ten]]
+
+
+def tool_cong(muc: str) -> list:
+    """Định nghĩa tool (dạng MCP) mà AI nối qua cửa này được thấy ở mức `muc`."""
+    if _gate() is None:
+        return []
+    return [{"name": ten, **dn} for ten, dn in _TOOL_CONG.items() if du_muc(muc, ten)]
+
+
+def nguon_cua_client(ctx, rec: dict) -> str:
+    """"ChatGPT" hay "Claude", theo tên client tự khai lúc đăng ký."""
+    c = _doc(ctx)["clients"].get((rec or {}).get("client") or "") or {}
+    return "Claude" if "claude" in str(c.get("ten") or "").casefold() else "ChatGPT"
+
+
+def _brain_dang_mo() -> str:
+    import mcp_hub
+    v = mcp_hub.resolve_vault(None)[0]
+    return str(v) if v else ""
+
+
+def _so(v, mac_dinh: int) -> int:
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return mac_dinh
+
+
+async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple:
+    """(văn bản, là_lỗi) cho một lượt gọi một trong ba tool."""
+    G = _gate()
+    if G is None:
+        return "ERROR: UNI MATE trên máy chủ cũ hơn 0.441.0, chưa có phần đọc và ghi hội thoại.", True
+    if not du_muc(muc, ten):
+        return (f"ERROR: Mức quyền hiện tại ({_TEN_MUC.get(muc, muc)}) không cho ghi. Chủ đổi mức ở trang "
+                "của gói UNI MATE trong ChatGPT."), True
+    brain = _brain_dang_mo()
+    if not brain:
+        return "ERROR: UNI MATE chưa có brain đang mở. Mở một brain trên dashboard rồi thử lại.", True
+    args = args if isinstance(args, dict) else {}
+    try:
+        if ten == T_DANH_SACH:
+            kq = G.list_chats(brain, limit=_so(args.get("limit"), 20), query=str(args.get("query") or ""))
+            out = {"chats": kq}
+        elif ten == T_DOC:
+            out = G.read_chat(str(args.get("chat_id") or ""), brain, limit=_so(args.get("limit"), 30))
+        else:
+            out = await G.record_note(brain, nguon_cua_client(ctx, rec), str(args.get("title") or ""),
+                                      str(args.get("note") or ""), asked=str(args.get("asked") or ""))
+            out["da_ghi"] = f"Đã ghi vào UNI MATE: {out['title']}"
+    except G.GateError as e:
+        return f"ERROR: {e}", True
+    return json.dumps(out, ensure_ascii=False, default=str), False
+
+
+class _MotTin:
+    """Đủ cho `mcp_hub.tra_loi_jsonrpc`: hàm đó chỉ đọc thân JSON của request."""
+
+    def __init__(self, body):
+        self._body = body
+
+    async def json(self):
+        return self._body
+
+
+def _la_cua_cong(m) -> bool:
+    if not isinstance(m, dict):
+        return False
+    if m.get("method") == "tools/list":
+        return True
+    return m.get("method") == "tools/call" and (m.get("params") or {}).get("name") in _TOOL_CONG
+
+
+async def tra_loi_mcp(ctx, rec: dict, body, muc: str, chuyen):
+    """Trả lời thân JSON-RPC đã đọc. `chuyen(thân)` là đường hub thường (trả Response của Starlette).
+
+    Tin không dính tới ba tool đi thẳng qua hub nguyên vẹn. tools/list lấy danh sách của hub rồi nối
+    thêm tool của cửa; tools/call tới ba tool thì gói tự trả lời."""
+    from starlette.responses import JSONResponse, Response
+    tins = body if isinstance(body, list) else [body]
+    if not any(_la_cua_cong(m) for m in tins):
+        return await chuyen(body)
+    ra = []
+    for m in tins:
+        if isinstance(m, dict) and m.get("method") == "tools/call" and _la_cua_cong(m):
+            p = m.get("params") or {}
+            van_ban, loi = await goi_tool_cong(ctx, rec, p.get("name"), p.get("arguments") or {}, muc)
+            r = {"jsonrpc": "2.0", "id": m.get("id"),
+                 "result": {"content": [{"type": "text", "text": van_ban}], "isError": loi}}
+        else:
+            resp = await chuyen(m)
+            if resp.status_code == 202 or not resp.body:
+                continue
+            r = json.loads(resp.body)
+            if (isinstance(m, dict) and m.get("method") == "tools/list" and isinstance(r, dict)
+                    and isinstance((r.get("result") or {}).get("tools"), list)):
+                r["result"]["tools"].extend(tool_cong(muc))
+        ra.append(r)
+    if not ra:
+        return Response(status_code=202)
+    return JSONResponse(ra if isinstance(body, list) else ra[0])
+
+
+# ============================================================
 # HTML (chữ tối thiểu 16px, đọc trên điện thoại)
 # ============================================================
 
@@ -466,10 +659,12 @@ def _trang(than: str, status: int = 200):
                  "Content-Security-Policy": "frame-ancestors 'none'"})
 
 
+_TEN_MUC = {"full": "Toàn quyền", "auto": "Ghi nháp", "suggest": "Chỉ đọc"}
 _MO_TA_MUC = {
-    "full": "Toàn quyền: đọc dữ liệu và làm việc thật (gửi tin, tạo đơn, đăng bài...)",
-    "auto": "Tự làm có giới hạn: đọc dữ liệu và viết nháp, không làm việc ra bên ngoài",
-    "suggest": "Chỉ đọc và gợi ý: không ghi file, không làm việc ra bên ngoài",
+    "full": "Toàn quyền: như Ghi nháp, cộng làm việc thật ra bên ngoài (gửi tin, tạo đơn, đăng bài...)",
+    "auto": ("Ghi nháp (mặc định): đọc dữ liệu, viết nháp, ghi lại điều đã chốt thành hội thoại; "
+             "không làm việc ra bên ngoài"),
+    "suggest": "Chỉ đọc: đọc dữ liệu và hội thoại của bạn, không ghi gì",
 }
 
 
@@ -515,6 +710,8 @@ def _trang_dong_y(ctx, yc: dict):
 <ul>
   <li>Dùng mọi kết nối bạn đã bật trong UNI MATE (bán hàng, quảng cáo, lịch, Zalo...)</li>
   <li>Đọc và ghi trong brain đang mở, tạo việc và nhắc lịch</li>
+  <li>Đọc các hội thoại của bạn với UNI MATE (không đọc hội thoại khách hàng, nhóm Zalo, Team) và
+      ghi lại điều đã chốt thành hội thoại mới khi bạn bảo</li>
   <li>Mức quyền: {html.escape(_MO_TA_MUC.get(muc, muc))}</li>
 </ul>
 <p class="phu">Đổi mức quyền hoặc ngắt kết nối bất cứ lúc nào trên trang của gói
@@ -552,6 +749,7 @@ def _trang_cai_dat(ctx, request):
 <button class="phu-nut" id="chep" type="button">Chép</button></div>
 {canh_bao}
 <h2>2. Mức quyền của ChatGPT</h2>
+<p class="phu">Mặc định là Ghi nháp. Muốn ChatGPT làm việc thật ra bên ngoài thì chọn Toàn quyền.</p>
 <select id="muc">{chon}</select>
 <div id="tb" class="phu" role="status"></div>
 <h2>3. Kết nối đang dùng: <span id="so">{so_ket_noi(ctx)}</span></h2>
@@ -622,6 +820,8 @@ async def _doc_form(request) -> dict:
 
 
 def register(ctx):
+    _giu_muc_ban_cu(ctx)
+
     # ---- khám phá (bắt buộc nằm ở gốc tên miền, nên đi qua register_well_known) ----
     def wk_pr(request, ctx):
         if not _co_mat_khau():
@@ -704,7 +904,8 @@ def register(ctx):
             return _tat()
         raw = str(request.headers.get("authorization") or "")
         raw = raw[7:].strip() if raw[:7].lower() == "bearer " else ""
-        if not kiem_token(ctx, raw):
+        rec = kiem_token(ctx, raw)
+        if not rec:
             from starlette.responses import JSONResponse
             return JSONResponse(
                 {"error": "unauthorized", "error_description": "cần kết nối lại từ ChatGPT"},
@@ -715,8 +916,19 @@ def register(ctx):
         # Mức quyền đọc TỪNG LƯỢT, không đóng băng vào token: chủ hạ quyền là có hiệu lực ngay.
         # include_ambient=False: tool native của tài khoản Claude không liên quan ở đây.
         # raw_vault=None: brain do UNI MATE tự suy (brain đang mở), không nhận header từ ngoài.
-        return await mcp_hub.tra_loi_jsonrpc(request, muc_quyen(ctx), include_plugins=True,
-                                             include_ambient=False, raw_vault=None)
+        muc = muc_quyen(ctx)
+
+        async def chuyen(than):
+            return await mcp_hub.tra_loi_jsonrpc(_MotTin(than), muc, include_plugins=True,
+                                                 include_ambient=False, raw_vault=None)
+
+        try:
+            body = await request.json()
+        except Exception:
+            # Thân hỏng: hub tự trả lỗi parse đúng chuẩn JSON-RPC.
+            return await mcp_hub.tra_loi_jsonrpc(request, muc, include_plugins=True,
+                                                 include_ambient=False, raw_vault=None)
+        return await tra_loi_mcp(ctx, rec, body, muc, chuyen)
 
     def mcp_khac(request, ctx):
         # Streamable HTTP không trạng thái: không có luồng do máy chủ mở, không có phiên để xoá.
