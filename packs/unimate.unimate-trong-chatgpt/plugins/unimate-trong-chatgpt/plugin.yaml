@@ -1,6 +1,6 @@
 name: UNI MATE trong ChatGPT
 slug: unimate-trong-chatgpt
-version: 1.2.0
+version: 1.3.0
 description: Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, ChatGPT hay Claude gọi công cụ của UNI MATE qua connector MCP có OAuth. Bấm Mở trang để lấy địa chỉ, chọn mức quyền, ngắt kết nối.
 author: UNI MATE
 enabled: true

@@ -37,6 +37,12 @@ Ranh giới an toàn
 - 1.2.0 thêm hai tool GỬI tin vào một hội thoại ở khung Trò chuyện chính như chủ gõ, và đọc câu trả
   lời. CHỈ ở mức Toàn quyền: một lượt chat của chủ chạy với quyền của chủ, nên mức thấp hơn mà gửi
   được là đi vòng qua chính mức đó. Cần UNI MATE 0.446.0; lõi cũ hơn thì hai tool này không hiện.
+- 1.3.0 GHIM bộ não cho cổng (chủ chốt 04/11/2026). "Brain đang mở" của lõi là brain của hội thoại cập nhật
+  gần nhất trên cả máy, kể cả hội thoại chạy nền, nên cổng từng nhảy bộ não sau một lần khởi động lại. Chủ chọn
+  bộ não ở đầu trang gói; CHƯA chọn thì mọi tool hội thoại của cổng báo lỗi kèm địa chỉ trang gói, không tự
+  dùng Brain mặc định hay brain đang mở. Bộ não đã ghim mất thì báo lỗi, không rơi sang bộ não khác. Mọi kết
+  quả ghi tên bộ não. Gửi tin không kèm chat_id thì tạo hội thoại mới ở bộ não đó. Cần UNI MATE 0.447.0;
+  lõi cũ hơn thì cổng theo hội thoại gần nhất như 1.2.0.
 - Các cửa máy chủ OpenAI gọi (đổi token, MCP...) khai `no_cookie`: lõi UNI MATE gỡ cookie trước
   khi giao request cho gói, nên không trang lạ nào mượn được phiên của chủ qua đó.
 """
@@ -50,6 +56,7 @@ import os
 import secrets
 import threading
 import time
+from pathlib import Path
 from urllib.parse import urlencode, urlparse
 
 TTL_ACCESS = 3600                   # 1 giờ; ChatGPT tự làm mới
@@ -63,6 +70,7 @@ MUC_QUYEN = ("full", "auto", "suggest")
 # trang của gói. Bản đã cài từ trước giữ nguyên mức đang chạy (xem `_giu_muc_ban_cu`).
 MUC_MAC_DINH = "auto"
 MUC_BAN_CU = "full"                 # mặc định của 1.0.0
+GAN_NHAT = "__gan_nhat__"          # lựa chọn phụ "Theo hội thoại gần nhất" (1.3.0)
 
 _HOST_REDIRECT = ("chatgpt.com", "chat.openai.com")
 _DUOI_REDIRECT = (".chatgpt.com", ".openai.com")
@@ -192,6 +200,24 @@ def dat_muc_quyen(ctx, m: str) -> bool:
     with _KHOA:
         d = _doc_json(ctx.data_dir / "cai-dat.json", {})
         d["muc_quyen"] = m
+        _ghi_json(ctx.data_dir / "cai-dat.json", d)
+    return True
+
+
+def bo_nao_ghim(ctx) -> str:
+    """Bộ não chủ ghim cho cổng (1.3.0): đường dẫn, GAN_NHAT, hoặc rỗng khi chưa chọn."""
+    return str(_doc_json(ctx.data_dir / "cai-dat.json", {}).get("bo_nao") or "")
+
+
+def dat_bo_nao(ctx, v: str) -> bool:
+    """Ghim bộ não. Chỉ nhận GAN_NHAT hoặc đúng đường dẫn một bộ não lõi đang liệt kê."""
+    v = str(v or "")
+    G = _gate()
+    if v != GAN_NHAT and not (co_ghim(G) and any(b["path"] == v for b in G.list_brains())):
+        return False
+    with _KHOA:
+        d = _doc_json(ctx.data_dir / "cai-dat.json", {})
+        d["bo_nao"] = v
         _ghi_json(ctx.data_dir / "cai-dat.json", d)
     return True
 
@@ -511,12 +537,16 @@ _TOOL_CONG = {
         "description": (
             "Gửi MỘT tin vào một hội thoại ở khung Trò chuyện chính của UNI MATE (id lấy từ "
             f"{T_DANH_SACH}, kênh web), như chủ tự gõ: UNI MATE chạy một lượt chat thật trong hội thoại "
-            "đó, dùng bộ não, công cụ và quyền của chủ. Chỉ dùng khi chủ bảo gửi, giao hay nhờ UNI MATE "
-            "làm việc trong hội thoại đó. Hội thoại đang trả lời dở thì tin thành tin gõ thêm. Không gửi "
-            "được vào hội thoại với Cộng sự, Telegram, Zalo, khách hàng, nhóm hay Team. Xong gọi "
+            "đó, dùng bộ não, công cụ và quyền của chủ. Không truyền chat_id thì tạo hội thoại MỚI ở khung "
+            "Trò chuyện chính, tiêu đề \"Từ ChatGPT: <title>\" hoặc \"Từ Claude: <title>\". Chỉ dùng khi chủ "
+            "bảo gửi, giao hay nhờ UNI MATE làm việc. Hội thoại đang trả lời dở thì tin thành tin gõ thêm. "
+            "Không gửi được vào hội thoại với Cộng sự, Telegram, Zalo, khách hàng, nhóm hay Team. Xong gọi "
             f"{T_KET_QUA} với chat_id và after_id trả về để lấy câu trả lời."),
-        "inputSchema": {"type": "object", "required": ["chat_id", "message"], "properties": {
-            "chat_id": {"type": "string", "description": "id hội thoại ở khung Trò chuyện chính."},
+        "inputSchema": {"type": "object", "required": ["message"], "properties": {
+            "chat_id": {"type": "string",
+                        "description": "id hội thoại ở khung Trò chuyện chính; bỏ trống để tạo hội thoại mới."},
+            "title": {"type": "string",
+                      "description": "Tiêu đề ngắn cho hội thoại mới (chỉ dùng khi không có chat_id; tuỳ chọn)."},
             "message": {"type": "string", "description": "Nội dung gửi, tối đa 7.000 ký tự."}}},
     },
     T_KET_QUA: {
@@ -544,6 +574,11 @@ def _gate():
 
 def du_muc(muc: str, ten: str) -> bool:
     return _BAC.get(muc, -1) >= _BAC[_MUC_TOI_THIEU[ten]]
+
+
+def co_ghim(G) -> bool:
+    """Lõi có danh sách bộ não để ghim (UNI MATE 0.447.0) không."""
+    return G is not None and hasattr(G, "list_brains")
 
 
 def co_gui(G) -> bool:
@@ -576,6 +611,51 @@ def _brain_dang_mo() -> str:
     return str(v) if v else ""
 
 
+def _ten_bo_nao(path: str) -> str:
+    try:
+        import brain_label
+        return brain_label.display(Path(path))
+    except Exception:
+        return Path(path).name
+
+
+def trang_goi(ctx, goc: str) -> str:
+    """Địa chỉ trang gói, để lời báo lỗi chỉ đúng chỗ chủ cần mở."""
+    return (goc or "") + _p(ctx)
+
+
+def bo_nao_cong(ctx, goc: str = "") -> tuple:
+    """(đường dẫn, tên hiển thị, lỗi) của bộ não cổng làm việc ở lượt này (1.3.0).
+
+    Đã ghim một bộ não thì LUÔN là bộ não đó, không đổi theo hoạt động trên dashboard. Chưa chọn thì báo lỗi
+    kèm địa chỉ trang gói, không tự dùng Brain mặc định hay brain đang mở: sau một lần khởi động lại, hội thoại
+    mới nhất có thể là UNI MATE Core của Brain Default, nên tự đoán là ghim nhầm. Lõi cũ hơn 0.447.0 (chưa có
+    danh sách bộ não) thì theo hội thoại gần nhất như 1.2.0."""
+    G = _gate()
+    v = bo_nao_ghim(ctx)
+    if not co_ghim(G) or v == GAN_NHAT:
+        p = _brain_dang_mo()
+        if not p:
+            return "", "", "UNI MATE chưa có brain đang mở. Mở một brain trên dashboard rồi thử lại."
+        return p, _ten_bo_nao(p), ""
+    if not v:
+        return "", "", ("Cổng UNI MATE chưa chọn bộ não. Mở trang gói UNI MATE trong ChatGPT, mục Bộ não, chọn bộ "
+                        f"não rồi thử lại: {trang_goi(ctx, goc)}")
+    b = next((x for x in G.list_brains() if x.get("path") == v), None)
+    if not b or not Path(v).is_dir():
+        return "", "", (f"Bộ não đã ghim cho cổng ({Path(v).name}) không còn hoặc không mở được. Mở trang gói UNI "
+                        f"MATE trong ChatGPT, mục Bộ não, chọn lại rồi thử lại: {trang_goi(ctx, goc)}")
+    return v, b.get("label") or Path(v).name, ""
+
+
+def vault_cho_hub(ctx) -> str:
+    """Đường dẫn bộ não truyền cho hub ở các tool thường của cửa: bộ não đã ghim, hoặc rỗng (hub tự suy như cũ)."""
+    v = bo_nao_ghim(ctx)
+    if not v or v == GAN_NHAT or not co_ghim(_gate()) or not Path(v).is_dir():
+        return ""
+    return v
+
+
 def _so(v, mac_dinh: int) -> int:
     try:
         return int(v)
@@ -583,7 +663,7 @@ def _so(v, mac_dinh: int) -> int:
         return mac_dinh
 
 
-async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple:
+async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str, goc: str = "") -> tuple:
     """(văn bản, là_lỗi) cho một lượt gọi một trong các tool của cửa."""
     G = _gate()
     if G is None:
@@ -596,9 +676,9 @@ async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple
                     "Chủ đổi mức ở trang của gói UNI MATE trong ChatGPT."), True
         return (f"ERROR: Mức quyền hiện tại ({_TEN_MUC.get(muc, muc)}) không cho ghi. Chủ đổi mức ở trang "
                 "của gói UNI MATE trong ChatGPT."), True
-    brain = _brain_dang_mo()
-    if not brain:
-        return "ERROR: UNI MATE chưa có brain đang mở. Mở một brain trên dashboard rồi thử lại.", True
+    brain, ten_bo_nao, loi_bo_nao = bo_nao_cong(ctx, goc)
+    if loi_bo_nao:
+        return f"ERROR: {loi_bo_nao}", True
     args = args if isinstance(args, dict) else {}
     try:
         if ten == T_DANH_SACH:
@@ -607,8 +687,14 @@ async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple
         elif ten == T_DOC:
             out = G.read_chat(str(args.get("chat_id") or ""), brain, limit=_so(args.get("limit"), 30))
         elif ten == T_GUI:
-            out = await G.send_chat(str(args.get("chat_id") or ""), brain, str(args.get("message") or ""),
-                                    nguon_cua_client(ctx, rec))
+            chat_id = str(args.get("chat_id") or "").strip()
+            if not chat_id and not co_ghim(G):
+                return "ERROR: Tạo hội thoại mới cần UNI MATE 0.447.0 trở lên. Truyền chat_id của hội thoại có sẵn.", True
+            if chat_id:
+                out = await G.send_chat(chat_id, brain, str(args.get("message") or ""), nguon_cua_client(ctx, rec))
+            else:
+                out = await G.send_chat("", brain, str(args.get("message") or ""), nguon_cua_client(ctx, rec),
+                                        title=str(args.get("title") or ""))
             out["huong_dan"] = (f"Đã gửi. Gọi {T_KET_QUA} với chat_id và after_id này để lấy câu trả lời.")
         elif ten == T_KET_QUA:
             out = await G.chat_result(str(args.get("chat_id") or ""), brain, after_id=_so(args.get("after_id"), 0),
@@ -618,7 +704,8 @@ async def goi_tool_cong(ctx, rec: dict, ten: str, args: dict, muc: str) -> tuple
                                       str(args.get("note") or ""), asked=str(args.get("asked") or ""))
             out["da_ghi"] = f"Đã ghi vào UNI MATE: {out['title']}"
     except G.GateError as e:
-        return f"ERROR: {e}", True
+        return f"ERROR: {e} (Bộ não: {ten_bo_nao})", True
+    out["bo_nao"] = ten_bo_nao
     return json.dumps(out, ensure_ascii=False, default=str), False
 
 
@@ -640,7 +727,7 @@ def _la_cua_cong(m) -> bool:
     return m.get("method") == "tools/call" and (m.get("params") or {}).get("name") in _TOOL_CONG
 
 
-async def tra_loi_mcp(ctx, rec: dict, body, muc: str, chuyen):
+async def tra_loi_mcp(ctx, rec: dict, body, muc: str, chuyen, goc: str = ""):
     """Trả lời thân JSON-RPC đã đọc. `chuyen(thân)` là đường hub thường (trả Response của Starlette).
 
     Tin không dính tới ba tool đi thẳng qua hub nguyên vẹn. tools/list lấy danh sách của hub rồi nối
@@ -653,7 +740,7 @@ async def tra_loi_mcp(ctx, rec: dict, body, muc: str, chuyen):
     for m in tins:
         if isinstance(m, dict) and m.get("method") == "tools/call" and _la_cua_cong(m):
             p = m.get("params") or {}
-            van_ban, loi = await goi_tool_cong(ctx, rec, p.get("name"), p.get("arguments") or {}, muc)
+            van_ban, loi = await goi_tool_cong(ctx, rec, p.get("name"), p.get("arguments") or {}, muc, goc)
             r = {"jsonrpc": "2.0", "id": m.get("id"),
                  "result": {"content": [{"type": "text", "text": van_ban}], "isError": loi}}
         else:
@@ -807,10 +894,34 @@ def _trang_cai_dat(ctx, request):
         chon = "".join(
             f'<option value="{m}"{" selected" if m == muc else ""}>{html.escape(_MO_TA_MUC[m])}</option>'
             for m in MUC_QUYEN)
+        G = _gate()
+        ghim = bo_nao_ghim(ctx)
+        if co_ghim(G):
+            ds = G.list_brains()
+            mat = bool(ghim and ghim != GAN_NHAT and not any(b["path"] == ghim for b in ds))
+            opts = ['<option value=""' + (" selected" if not ghim or mat else "") + ' disabled>Chọn bộ não...</option>']
+            opts += [f'<option value="{html.escape(b["path"])}"{" selected" if b["path"] == ghim else ""}>'
+                     f'{html.escape(b.get("label") or b["name"])}</option>' for b in ds]
+            opts.append(f'<option value="{GAN_NHAT}"{" selected" if ghim == GAN_NHAT else ""}>'
+                        'Theo hội thoại gần nhất (dễ nhảy bộ não)</option>')
+            nhac = ""
+            if not ghim:
+                nhac = '<p class="loi">Chưa chọn bộ não: ChatGPT, Claude chưa đọc, ghi, gửi hội thoại được.</p>'
+            elif mat:
+                nhac = f'<p class="loi">Bộ não đã ghim ({html.escape(Path(ghim).name)}) không còn. Chọn lại.</p>'
+            khoi_bo_nao = f"""
+<h2>Bộ não</h2>
+<p class="phu">ChatGPT, Claude đọc, ghi và gửi hội thoại trong bộ não này, không đổi theo việc bạn mở bộ não nào
+trên dashboard.</p>
+<select id="bo_nao">{"".join(opts)}</select>
+{nhac}<div id="tb_bo_nao" class="phu" role="status"></div>"""
+        else:
+            khoi_bo_nao = ('<h2>Bộ não</h2><p class="phu">Chọn bộ não cố định cho cổng cần UNI MATE 0.447.0 trở lên. '
+                           'Hiện cổng làm trên bộ não của hội thoại gần nhất.</p>')
         canh_bao = "" if https else (
             '<p class="loi">ChatGPT và Claude chỉ nhận địa chỉ https. Gắn tên miền riêng cho UNI MATE '
             '(Cài đặt, mục Giọng nói, thương hiệu và truy cập) rồi tải lại trang này.</p>')
-        than_chinh = f"""
+        than_chinh = f"""{khoi_bo_nao}
 <h2>1. Dán địa chỉ này vào ChatGPT hoặc Claude</h2>
 <p class="phu">ChatGPT: Cài đặt, Apps and Connectors, Create, ô "MCP Server URL", xác thực OAuth.
 Claude.ai: Cài đặt, Connectors, Add custom connector, ô "Remote MCP server URL".</p>
@@ -844,6 +955,14 @@ document.getElementById("muc").onchange = async (ev) => {{
   try {{ await goi({json.dumps(_p(ctx, "cai-dat"))}, {{muc_quyen: ev.target.value}});
          tb.className = "tot"; tb.textContent = "Đã lưu. Có hiệu lực từ lượt gọi kế tiếp."; }}
   catch (x) {{ tb.className = "loi"; tb.textContent = x.message; }}
+}};
+const bn = document.getElementById("bo_nao");
+if (bn) bn.onchange = async (ev) => {{
+  const t = document.getElementById("tb_bo_nao");
+  t.className = "phu"; t.textContent = "Đang lưu...";
+  try {{ await goi({json.dumps(_p(ctx, "bo-nao"))}, {{bo_nao: ev.target.value}});
+         t.className = "tot"; t.textContent = "Đã lưu. Có hiệu lực từ lượt gọi kế tiếp."; }}
+  catch (x) {{ t.className = "loi"; t.textContent = x.message; }}
 }};
 document.getElementById("ngat").onclick = async () => {{
   if (!confirm("Ngắt mọi kết nối ChatGPT và Claude? Muốn dùng lại phải kết nối lại từ đó.")) return;
@@ -985,20 +1104,23 @@ def register(ctx):
         import mcp_hub
         # Mức quyền đọc TỪNG LƯỢT, không đóng băng vào token: chủ hạ quyền là có hiệu lực ngay.
         # include_ambient=False: tool native của tài khoản Claude không liên quan ở đây.
-        # raw_vault=None: brain do UNI MATE tự suy (brain đang mở), không nhận header từ ngoài.
+        # raw_vault: KHÔNG bao giờ nhận header từ ngoài. Chủ đã ghim bộ não trên trang gói (1.3.0) thì các tool
+        # thường của hub cũng làm trên bộ não đó; chưa ghim thì để trống, hub tự suy như cũ.
         muc = muc_quyen(ctx)
+        vault = vault_cho_hub(ctx) or None
+        goc = _goc(request)
 
         async def chuyen(than):
             return await mcp_hub.tra_loi_jsonrpc(_MotTin(than), muc, include_plugins=True,
-                                                 include_ambient=False, raw_vault=None)
+                                                 include_ambient=False, raw_vault=vault)
 
         try:
             body = await request.json()
         except Exception:
             # Thân hỏng: hub tự trả lỗi parse đúng chuẩn JSON-RPC.
             return await mcp_hub.tra_loi_jsonrpc(request, muc, include_plugins=True,
-                                                 include_ambient=False, raw_vault=None)
-        return await tra_loi_mcp(ctx, rec, body, muc, chuyen)
+                                                 include_ambient=False, raw_vault=vault)
+        return await tra_loi_mcp(ctx, rec, body, muc, chuyen, goc)
 
     def mcp_khac(request, ctx):
         # Streamable HTTP không trạng thái: không có luồng do máy chủ mở, không có phiên để xoá.
@@ -1022,5 +1144,13 @@ def register(ctx):
         return _json({"ok": True, "muc_quyen": muc_quyen(ctx)})
 
     ctx.register_http("cai-dat", cai_dat, methods=("POST",))
+
+    async def bo_nao(request, ctx):
+        f = await _doc_form(request)
+        if not dat_bo_nao(ctx, str(f.get("bo_nao") or "")):
+            return _json({"ok": False, "error": "Bộ não không hợp lệ hoặc không còn. Tải lại trang rồi chọn lại."}, 400)
+        return _json({"ok": True, "bo_nao": bo_nao_ghim(ctx)})
+
+    ctx.register_http("bo-nao", bo_nao, methods=("POST",))
     ctx.register_http("ngat", lambda request, ctx: _json({"ok": True, "da_ngat": ngat_tat_ca(ctx)}),
                       methods=("POST",))
