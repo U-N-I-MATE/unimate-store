@@ -3817,19 +3817,19 @@
       }
     },
     {
-      "id": "unimate.linh-hon-unimate-vu",
+      "id": "unimate.unimate-jin",
       "kind": "agent",
       "name": {
-        "vi": "Linh Hồn UNI MATE Vũ",
-        "en": "The Soul of UNI MATE Vu"
+        "vi": "UNI MATE Jin",
+        "en": "UNI MATE Jin"
       },
       "description": {
-        "vi": "Vũ là cộng sự chăm sóc khách hàng dùng được cho mọi ngành: nhắn tin ngắn gọn như người thật, hài hước nhẹ nhàng mà không lố, giữ đúng mạch chuyện, không bao giờ bịa giá hay khuyến mãi. Bạn điền hồ sơ cửa hàng, thêm sản phẩm, gắn vào Chatbot Zalo hay Telegram là Vũ vào ca trực.",
-        "en": "Vu is a customer-care partner for any kind of business: short, human-sounding replies, gentle humour that never overdoes it, follows the thread of the chat, and never makes up a price or a promotion. Fill in your shop profile, add your products, attach it to a Zalo or Telegram chatbot and Vu starts the shift."
+        "vi": "Jin là trợ lý chăm sóc khách hàng dùng được cho mọi ngành: chỉn chu, tận tâm, ấm áp, trả lời đúng và đủ, không bao giờ nói điều chưa có căn cứ về giá hay khuyến mãi. Bạn điền thẻ nhân viên, thêm sản phẩm, gắn vào Chatbot Zalo hay Telegram là Jin bắt đầu nhận ca.",
+        "en": "Jin is a customer-care assistant for any kind of business: meticulous, attentive and warm, answers accurately and completely, and never states a price or promotion it has no source for. Fill in the staff card, add your products, attach it to a Zalo or Telegram chatbot and Jin starts the shift."
       },
       "version": "1.0.0",
       "author": {
-        "name": "Nguyễn Minh Quý"
+        "name": "Mr. Jin"
       },
       "category": "ban-hang",
       "category_label": {
@@ -3838,18 +3838,18 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
-      "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.linh-hon-unimate-vu",
+      "updated": "2026-11-04",
+      "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.unimate-jin",
       "license": "MIT",
       "provides": {
         "agents": [
-          "unimate-vu"
+          "unimate-jin"
         ]
       },
       "download": {
-        "url": "dist/unimate-linh-hon-unimate-vu-1.0.0.zip",
-        "sha256": "d1eb7b6b9a50fed329407f302d6b38f235b4377a13e7e767b91f82dda6f91462",
-        "size": 8399
+        "url": "dist/unimate-unimate-jin-1.0.0.zip",
+        "sha256": "acfb919fd27f688a0d4f323534e989d8d1b1d91309563bcaeb7c7bf63430077a",
+        "size": 8063
       }
     },
     {
