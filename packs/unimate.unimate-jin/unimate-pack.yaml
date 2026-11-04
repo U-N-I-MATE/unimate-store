@@ -1,0 +1,21 @@
+format: unimate-pack
+spec: 1
+id: unimate.unimate-jin
+version: 1.0.0
+name:
+  vi: UNI MATE Jin
+  en: UNI MATE Jin
+description:
+  vi: 'Jin là trợ lý chăm sóc khách hàng dùng được cho mọi ngành: chỉn chu, tận tâm, ấm áp, trả lời
+    đúng và đủ, không bao giờ nói điều chưa có căn cứ về giá hay khuyến mãi. Bạn điền thẻ nhân viên,
+    thêm sản phẩm, gắn vào Chatbot Zalo hay Telegram là Jin bắt đầu nhận ca.'
+  en: 'Jin is a customer-care assistant for any kind of business: meticulous, attentive and warm,
+    answers accurately and completely, and never states a price or promotion it has no source for.
+    Fill in the staff card, add your products, attach it to a Zalo or Telegram chatbot and Jin
+    starts the shift.'
+author: {name: Mr. Jin}
+license: MIT
+homepage: "https://github.com/U-N-I-MATE/unimate-store"
+compat: {app: ">=0.55.27"}
+provides:
+  agents: [unimate-jin]
