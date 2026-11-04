@@ -6,14 +6,14 @@ format: unimate-pack
 spec: 1
 
 id: unimate.unimate-trong-chatgpt
-version: 1.2.0
+version: 1.3.0
 
 name:
   vi: UNI MATE trong ChatGPT
   en: UNI MATE in ChatGPT
 description:
-  vi: Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, và ChatGPT hay Claude tự gọi công cụ của UNI MATE (số liệu, brain, nhắc lịch, Zalo), đọc hội thoại của bạn, ghi lại điều đã chốt, và ở mức Toàn quyền gửi tin vào khung Trò chuyện như bạn tự gõ. Cần UNI MATE 0.64.26 trở lên (đọc, ghi hội thoại cần 0.441.0; gửi tin cần 0.446.0), mật khẩu quản trị và tên miền https.
-  en: Chat on chatgpt.com or claude.ai with your own plan while ChatGPT or Claude calls UNI MATE's tools (numbers, brain, reminders, Zalo), reads your chats, records what you settled and, at Full level, sends a message into the main chat as if you typed it. Needs UNI MATE 0.64.26 or newer (chat reading and recording need 0.441.0; sending needs 0.446.0), an admin password and an https domain.
+  vi: Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, và ChatGPT hay Claude tự gọi công cụ của UNI MATE (số liệu, brain, nhắc lịch, Zalo), đọc hội thoại của bạn, ghi lại điều đã chốt, và ở mức Toàn quyền gửi tin vào khung Trò chuyện như bạn tự gõ, trên bộ não bạn ghim cho cổng. Cần UNI MATE 0.64.26 trở lên (đọc, ghi hội thoại cần 0.441.0; gửi tin cần 0.446.0; ghim bộ não, tạo hội thoại mới cần 0.447.0), mật khẩu quản trị và tên miền https.
+  en: Chat on chatgpt.com or claude.ai with your own plan while ChatGPT or Claude calls UNI MATE's tools (numbers, brain, reminders, Zalo), reads your chats, records what you settled and, at Full level, sends a message into the main chat as if you typed it, in the brain you pin for the gate. Needs UNI MATE 0.64.26 or newer (chat reading and recording need 0.441.0; sending needs 0.446.0; brain pinning and new chats need 0.447.0), an admin password and an https domain.
 
 author:
   name: UNI MATE

@@ -130,6 +130,9 @@ brain = tempfile.mkdtemp(prefix="unimate-cong-brain-")
 mcp_hub.resolve_vault = lambda raw: (Path(brain), "phien", "")
 store = get_store()
 key = main._brain_key(brain)
+# 1.3.0: the gate needs a brain picked on the pack page. This file checks the 1.1.0/1.2.0 behaviour, so it picks
+# "follow the latest conversation" (the brain the stubbed resolve_vault returns). Pinning: test_ghim_bo_nao.py.
+P.dat_bo_nao(c, P.GAN_NHAT)
 
 
 def chat(channel, title):
