@@ -2298,8 +2298,8 @@
         "en": "UNI MATE in ChatGPT"
       },
       "description": {
-        "vi": "Chat trên chatgpt.com bằng gói ChatGPT của bạn, và ChatGPT tự gọi công cụ của UNI MATE: số liệu, brain, nhắc lịch, Zalo. Đọc hội thoại của bạn và ghi lại điều đã chốt vào UNI MATE. Mặc định Ghi nháp, chọn mức quyền, ngắt kết nối bất cứ lúc nào. Cần UNI MATE 0.64.26 trở lên (đọc, ghi hội thoại cần 0.441.0), mật khẩu quản trị và tên miền https.",
-        "en": "Chat on chatgpt.com with your own ChatGPT plan while ChatGPT calls UNI MATE's tools: numbers, brain, reminders, Zalo. Reads your chats and records what you settled into UNI MATE. Draft level by default, pick the permission level, disconnect any time. Needs UNI MATE 0.64.26 or newer (chat reading and recording need 0.441.0), an admin password and an https domain."
+        "vi": "Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, và ChatGPT hay Claude tự gọi công cụ của UNI MATE: số liệu, brain, nhắc lịch, Zalo. Đọc hội thoại của bạn và ghi lại điều đã chốt vào UNI MATE. Mặc định Ghi nháp, chọn mức quyền, ngắt kết nối bất cứ lúc nào. Cần UNI MATE 0.64.26 trở lên (đọc, ghi hội thoại cần 0.441.0), mật khẩu quản trị và tên miền https.",
+        "en": "Chat on chatgpt.com or claude.ai with your own plan while ChatGPT or Claude calls UNI MATE's tools: numbers, brain, reminders, Zalo. Reads your chats and records what you settled into UNI MATE. Draft level by default, pick the permission level, disconnect any time. Needs UNI MATE 0.64.26 or newer (chat reading and recording need 0.441.0), an admin password and an https domain."
       },
       "version": "1.1.0",
       "author": {
@@ -2317,8 +2317,8 @@
       "icon": "packs/unimate.unimate-trong-chatgpt/assets/unimate-trong-chatgpt.png",
       "download": {
         "url": "dist/unimate-unimate-trong-chatgpt-1.1.0.zip",
-        "sha256": "3de57931cbb950be00336430837d54498ad80272f13953a3c5364f1e3340af05",
-        "size": 48091
+        "sha256": "68d9f86d486efcf6b16abe0cda43397553f526d2533089c0586b0947f6338753",
+        "size": 48985
       }
     },
     {

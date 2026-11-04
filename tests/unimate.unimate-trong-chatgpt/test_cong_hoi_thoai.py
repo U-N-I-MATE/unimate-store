@@ -83,6 +83,20 @@ def run(c):
     return asyncio.run(c)
 
 
+# ---- 0. địa chỉ quay về: ChatGPT như cũ, Claude.ai đúng MỘT địa chỉ Anthropic công bố ----
+CLAUDE_CB = "https://claude.ai/api/mcp/auth_callback"
+for uri, muon in ((CLAUDE_CB, True),
+                  ("https://chatgpt.com/connector_platform_oauth_redirect", True),
+                  ("https://claude.com/api/mcp/auth_callback", False),     # chưa có trong tài liệu Anthropic
+                  ("https://claude.ai/api/mcp/auth_callback/", False),
+                  ("https://claude.ai/api/mcp/auth_callback?x=1", False),
+                  ("https://claude.ai/khac", False),
+                  ("https://evil.claude.ai/api/mcp/auth_callback", False),
+                  ("http://claude.ai/api/mcp/auth_callback", False),
+                  ("https://claude.ai.evil.com/api/mcp/auth_callback", False),
+                  ("https://localhost/callback", False)):
+    check(f"redirect {'nhận' if muon else 'chặn'}: {uri}", P.redirect_hop_le(uri) is muon)
+
 # ---- 1. mức mặc định ----
 c = Ctx()
 P.register(c)
@@ -132,8 +146,15 @@ s_khach = chat("bot:shop", "Khách hỏi giá")
 d = P._doc(c)
 cid = next(iter(d["clients"]))
 tok = P._cap_token(d, cid, "ho1")["access_token"]
-d["clients"]["claude-1"] = {"id": "claude-1", "ten": "Claude", "redirect_uris": [], "tao": 0}
-tok_claude = P._cap_token(d, "claude-1", "ho2")["access_token"]
+P._ghi(c, d)
+# Client Claude đăng ký thật qua RFC 7591; tên tự khai "ChatGPT" cũng không đổi được nguồn.
+ma, kq = P.dang_ky_client(c, {"redirect_uris": [CLAUDE_CB], "client_name": "ChatGPT"})
+check("đăng ký client Claude với đúng địa chỉ quay về", ma == 201, kq)
+ma2, kq2 = P.dang_ky_client(c, {"redirect_uris": [CLAUDE_CB]})
+check("client Claude không khai tên: tên là Claude", kq2.get("client_name") == "Claude", kq2)
+d = P._doc(c)
+tok_claude = P._cap_token(d, kq["client_id"], "ho2")["access_token"]
+d["clients"][cid]["ten"] = "Claude giả"          # client ChatGPT tự khai tên Claude
 P._ghi(c, d)
 MCP = c.http[("mcp", "POST")]
 
@@ -186,7 +207,9 @@ sid = json.loads(txt).get("session_id") if not loi else None
 row = store.get_session(sid) if sid else {}
 check("Ghi nháp: ghi thành hội thoại 'Từ ChatGPT: ...'", row.get("title") == "Từ ChatGPT: Kế hoạch Tết", txt)
 loi, txt = call(P.T_GHI, {"title": "Họp NCC", "note": "Chốt giá."}, tok_claude)
-check("client tên Claude: 'Từ Claude: ...'", not loi and "Từ Claude: Họp NCC" in txt, txt)
+check("client quay về claude.ai: 'Từ Claude: ...' dù tự khai tên ChatGPT", not loi and "Từ Claude: Họp NCC" in txt, txt)
+loi, txt = call(P.T_GHI, {"title": "Giá", "note": "Chốt giá."})
+check("client quay về chatgpt.com: 'Từ ChatGPT: ...' dù tự khai tên Claude", not loi and "Từ ChatGPT: Giá" in txt, txt)
 loi, txt = call(P.T_GHI, {"title": "", "note": "x"})
 check("thiếu tiêu đề: lỗi đọc được", loi and "tiêu đề" in txt, txt)
 mcp_hub.resolve_vault = lambda raw: (None, "", "")

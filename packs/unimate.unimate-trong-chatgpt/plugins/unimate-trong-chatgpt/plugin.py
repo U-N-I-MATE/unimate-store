@@ -24,8 +24,9 @@ Cần UNI MATE 0.64.26 trở lên: bản đó mở `ctx.register_http` và `ctx.
 Ranh giới an toàn
 -----------------
 - UNI MATE chưa có mật khẩu quản trị thì mọi cửa OAuth trả 404: cửa đồng ý dựa vào đăng nhập.
-- `redirect_uri` chỉ nhận máy của OpenAI. Kẻ tự đăng ký client trỏ về máy mình rồi dụ chủ bấm
-  "Cho phép" sẽ không nhận được mã.
+- `redirect_uri` chỉ nhận máy của OpenAI, và từ 1.1.0 ĐÚNG một địa chỉ quay về của Claude.ai do
+  Anthropic công bố. Kẻ tự đăng ký client trỏ về máy mình rồi dụ chủ bấm "Cho phép" sẽ không nhận
+  được mã.
 - Token, mã cấp quyền chỉ lưu dạng BĂM SHA-256. Tệp lộ ra không dùng được để gọi.
 - Token của cửa này KHÔNG phải `hub_token` của Claude Code/Codex, và ngược lại.
 - Mức quyền (full / auto / suggest) chủ chọn trên trang của gói; hub ép ở lớp cứng như mọi
@@ -62,6 +63,13 @@ MUC_BAN_CU = "full"                 # mặc định của 1.0.0
 
 _HOST_REDIRECT = ("chatgpt.com", "chat.openai.com")
 _DUOI_REDIRECT = (".chatgpt.com", ".openai.com")
+# 1.1.0 (chủ duyệt 04/11/2026): Claude.ai (web, Desktop, điện thoại) nối được, chỉ qua ĐÚNG một địa chỉ
+# quay về mà Anthropic công bố, so nguyên văn cả chuỗi, không nhận đuôi tên miền. Nguồn: tài liệu
+# "Authentication for connectors", mục Callback URLs (claude.com/docs/connectors/building/authentication),
+# đối chiếu 04/11/2026: "register exactly this redirect URI: https://claude.ai/api/mcp/auth_callback".
+# Địa chỉ claude.com chưa có trong tài liệu của Anthropic nên KHÔNG nhận. Claude Code (quay về localhost)
+# không thuộc phạm vi gói: Claude Code đã nối thẳng hub của UNI MATE.
+_REDIRECT_CLAUDE = ("https://claude.ai/api/mcp/auth_callback",)
 
 _KHOA = threading.Lock()
 
@@ -233,7 +241,13 @@ def _s256(verifier: str) -> str:
         hashlib.sha256(verifier.encode("ascii")).digest()).decode().rstrip("=")
 
 
+def la_claude(uri: str) -> bool:
+    return uri in _REDIRECT_CLAUDE
+
+
 def redirect_hop_le(uri: str) -> bool:
+    if la_claude(uri):
+        return True
     try:
         u = urlparse(uri)
     except Exception:
@@ -258,8 +272,8 @@ def dang_ky_client(ctx, body: dict) -> tuple:
     if not isinstance(uris, list) or not uris or not all(
             isinstance(u, str) and redirect_hop_le(u) for u in uris):
         return 400, {"error": "invalid_redirect_uri",
-                     "error_description": "redirect_uris phải là địa chỉ https của ChatGPT"}
-    ten = str(body.get("client_name") or "ChatGPT")[:120]
+                     "error_description": "redirect_uris phải là địa chỉ https của ChatGPT hoặc Claude"}
+    ten = str(body.get("client_name") or ("Claude" if any(map(la_claude, uris)) else "ChatGPT"))[:120]
     with _KHOA:
         d = _doc(ctx)
         if len(d["clients"]) >= MAX_CLIENT:
@@ -292,7 +306,7 @@ def bat_dau_uy_quyen(ctx, q: dict) -> tuple:
         d = _doc(ctx)
         client = d["clients"].get(cid)
         if not client:
-            return "trang_loi", "Không nhận ra kết nối này. Mở lại ChatGPT và bấm kết nối lại."
+            return "trang_loi", "Không nhận ra kết nối này. Mở lại ChatGPT hoặc Claude và bấm kết nối lại."
         ru = str(q.get("redirect_uri") or "")
         if ru not in client["redirect_uris"]:
             return "trang_loi", "Địa chỉ quay về không khớp với lúc đăng ký."
@@ -510,8 +524,12 @@ def tool_cong(muc: str) -> list:
 
 
 def nguon_cua_client(ctx, rec: dict) -> str:
-    """"ChatGPT" hay "Claude", theo tên client tự khai lúc đăng ký."""
+    """"ChatGPT" hay "Claude". Dựa vào địa chỉ quay về đã đăng ký (tên client là chữ tự khai, ai cũng
+    đặt được), chỉ khi không có mới xem tên."""
     c = _doc(ctx)["clients"].get((rec or {}).get("client") or "") or {}
+    uris = c.get("redirect_uris") or []
+    if uris:
+        return "Claude" if any(la_claude(u) for u in uris) else "ChatGPT"
     return "Claude" if "claude" in str(c.get("ten") or "").casefold() else "ChatGPT"
 
 
@@ -672,7 +690,7 @@ def _trang_dang_nhap():
     """Trình duyệt chưa vào dashboard: đăng nhập NGAY TẠI ĐÂY rồi tải lại, không bắt đi vòng."""
     return _trang("""
 <h1>Đăng nhập UNI MATE</h1>
-<p class="phu">ChatGPT đang xin quyền dùng UNI MATE của bạn. Đăng nhập để xem và quyết định.</p>
+<p class="phu">ChatGPT hoặc Claude đang xin quyền dùng UNI MATE của bạn. Đăng nhập để xem và quyết định.</p>
 <form id="f">
   <label for="u">Tài khoản</label><input id="u" name="username" autocomplete="username" required>
   <label for="p">Mật khẩu</label>
@@ -704,8 +722,9 @@ document.getElementById("f").onsubmit = async (ev) => {
 def _trang_dong_y(ctx, yc: dict):
     muc = muc_quyen(ctx)
     host = html.escape(urlparse(yc["redirect_uri"]).hostname or "")
+    nguon = "Claude" if la_claude(yc["redirect_uri"]) else "ChatGPT"
     return _trang(f"""
-<h1>Cho phép ChatGPT dùng UNI MATE?</h1>
+<h1>Cho phép {nguon} dùng UNI MATE?</h1>
 <p><b>{html.escape(yc["ten"])}</b> trên <code>{host}</code> muốn gọi công cụ của UNI MATE.</p>
 <ul>
   <li>Dùng mọi kết nối bạn đã bật trong UNI MATE (bán hàng, quảng cáo, lịch, Zalo...)</li>
@@ -740,16 +759,17 @@ def _trang_cai_dat(ctx, request):
             f'<option value="{m}"{" selected" if m == muc else ""}>{html.escape(_MO_TA_MUC[m])}</option>'
             for m in MUC_QUYEN)
         canh_bao = "" if https else (
-            '<p class="loi">ChatGPT chỉ nhận địa chỉ https. Gắn tên miền riêng cho UNI MATE '
+            '<p class="loi">ChatGPT và Claude chỉ nhận địa chỉ https. Gắn tên miền riêng cho UNI MATE '
             '(Cài đặt, mục Giọng nói, thương hiệu và truy cập) rồi tải lại trang này.</p>')
         than_chinh = f"""
-<h2>1. Dán địa chỉ này vào ChatGPT</h2>
-<p class="phu">ChatGPT, Cài đặt, Apps and Connectors, Create. Ô "MCP Server URL", xác thực OAuth.</p>
+<h2>1. Dán địa chỉ này vào ChatGPT hoặc Claude</h2>
+<p class="phu">ChatGPT: Cài đặt, Apps and Connectors, Create, ô "MCP Server URL", xác thực OAuth.
+Claude.ai: Cài đặt, Connectors, Add custom connector, ô "Remote MCP server URL".</p>
 <div class="hop"><input id="url" readonly value="{html.escape(url)}">
 <button class="phu-nut" id="chep" type="button">Chép</button></div>
 {canh_bao}
-<h2>2. Mức quyền của ChatGPT</h2>
-<p class="phu">Mặc định là Ghi nháp. Muốn ChatGPT làm việc thật ra bên ngoài thì chọn Toàn quyền.</p>
+<h2>2. Mức quyền của AI kết nối vào</h2>
+<p class="phu">Mặc định là Ghi nháp. Muốn ChatGPT, Claude làm việc thật ra bên ngoài thì chọn Toàn quyền.</p>
 <select id="muc">{chon}</select>
 <div id="tb" class="phu" role="status"></div>
 <h2>3. Kết nối đang dùng: <span id="so">{so_ket_noi(ctx)}</span></h2>
@@ -777,7 +797,7 @@ document.getElementById("muc").onchange = async (ev) => {{
   catch (x) {{ tb.className = "loi"; tb.textContent = x.message; }}
 }};
 document.getElementById("ngat").onclick = async () => {{
-  if (!confirm("Ngắt mọi kết nối ChatGPT? Muốn dùng lại phải kết nối lại từ ChatGPT.")) return;
+  if (!confirm("Ngắt mọi kết nối ChatGPT và Claude? Muốn dùng lại phải kết nối lại từ đó.")) return;
   try {{ await goi({json.dumps(_p(ctx, "ngat"))});
          document.getElementById("so").textContent = "0";
          tb.className = "tot"; tb.textContent = "Đã ngắt mọi kết nối."; }}
@@ -786,7 +806,8 @@ document.getElementById("ngat").onclick = async () => {{
 </script>"""
     return _trang(f"""
 <h1>UNI MATE trong ChatGPT</h1>
-<p class="phu">Chat trên chatgpt.com bằng gói của bạn, ChatGPT tự gọi công cụ của UNI MATE.
+<p class="phu">Chat trên chatgpt.com hoặc claude.ai bằng gói của bạn, ChatGPT hay Claude tự gọi công cụ
+của UNI MATE.
 <a href="{HUONG_DAN}" target="_blank" rel="noopener">Hướng dẫn từng bước</a></p>
 {than_chinh}""")
 
@@ -859,7 +880,7 @@ def register(ctx):
     def uy_quyen(request, ctx):
         from starlette.responses import RedirectResponse
         if not _co_mat_khau():
-            return _trang_loi("UNI MATE chưa có mật khẩu quản trị nên chưa kết nối được ChatGPT.", 404)
+            return _trang_loi("UNI MATE chưa có mật khẩu quản trị nên chưa kết nối được.", 404)
         kq, gia_tri = bat_dau_uy_quyen(ctx, dict(request.query_params))
         if kq == "trang_loi":
             return _trang_loi(gia_tri)
@@ -876,7 +897,7 @@ def register(ctx):
         f = await _doc_form(request)
         url = ket_thuc_uy_quyen(ctx, str(f.get("yeu_cau") or ""), f.get("hanh_dong") == "cho_phep")
         if not url:
-            return _trang_loi("Yêu cầu này đã quá hạn. Mở lại ChatGPT và kết nối lại.")
+            return _trang_loi("Yêu cầu này đã quá hạn. Mở lại ChatGPT hoặc Claude và kết nối lại.")
         return RedirectResponse(url, status_code=302)
 
     ctx.register_http("oauth/authorize", uy_quyen, public=True)
@@ -908,7 +929,7 @@ def register(ctx):
         if not rec:
             from starlette.responses import JSONResponse
             return JSONResponse(
-                {"error": "unauthorized", "error_description": "cần kết nối lại từ ChatGPT"},
+                {"error": "unauthorized", "error_description": "cần kết nối lại từ ChatGPT hoặc Claude"},
                 status_code=401,
                 headers={"WWW-Authenticate": www_authenticate(
                     ctx, _goc(request), "missing, invalid or expired token")})

@@ -88,6 +88,20 @@ Mỗi lần ChatGPT định làm một việc có tác động thật (gửi tin
 
 ---
 
+## Dùng với Claude.ai (từ bản 1.1.0)
+
+Cùng địa chỉ ở bước 1 cũng nối được vào **Claude.ai** (web, Desktop, điện thoại), bằng gói Claude của bạn.
+
+1. Trên claude.ai vào **Settings, Connectors**, bấm **Add custom connector**.
+2. Ô **Remote MCP server URL**: dán địa chỉ đã chép ở bước 1. Không cần điền Client ID.
+3. Bấm **Add**, rồi **Connect**. Trang Cho phép của UNI MATE hiện ra, làm như bước 5.
+
+Gói Team, Enterprise thì chủ tổ chức phải thêm connector trước. Tên các mục có thể hơi khác theo phiên bản Claude.
+
+Mức quyền và nút **Ngắt mọi kết nối** dùng chung cho cả ChatGPT và Claude. Điều chốt bên Claude được ghi thành hội thoại **"Từ Claude: ..."**.
+
+---
+
 ## Mức quyền
 
 Chọn trên trang của gói (trang Plugin, nút **Mở trang**). Đổi xong có hiệu lực ngay, không cần kết nối lại.
@@ -134,6 +148,6 @@ Từ bản 1.1.0, cài mới bắt đầu ở **Ghi nháp**. Muốn ChatGPT làm
 ## An toàn
 
 - Token chỉ lưu dạng băm trong thư mục dữ liệu riêng của gói, không nằm trong brain.
-- ChatGPT chỉ được quay về đúng máy của OpenAI (`chatgpt.com`, `*.openai.com`). Kẻ gian tự đăng ký một kết nối trỏ về máy mình sẽ không nhận được mã.
+- ChatGPT chỉ được quay về đúng máy của OpenAI (`chatgpt.com`, `*.openai.com`). Claude chỉ được quay về đúng **một** địa chỉ Anthropic công bố trong tài liệu kết nối: `https://claude.ai/api/mcp/auth_callback`, so khớp nguyên văn, không nhận địa chỉ con hay tên miền khác. Kẻ gian tự đăng ký một kết nối trỏ về máy mình sẽ không nhận được mã.
 - Token của gói này tách hẳn khỏi token Claude Code và Codex dùng. Ngắt bên này không ảnh hưởng bên kia.
 - Refresh token xoay vòng: một token cũ bị dùng lại là UNI MATE thu hồi cả chuỗi và bắt cho phép lại.
