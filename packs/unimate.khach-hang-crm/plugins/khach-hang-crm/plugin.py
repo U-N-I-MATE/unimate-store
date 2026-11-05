@@ -72,19 +72,39 @@ def _ra(d):
     return s
 
 
+# 1.1.0 (owner's decision 05/11/2026): the names of people commenting on the owner's Facebook Pages stay in the inbox.
+# The engines behind these tools run on outside servers, so a tool result never carries such a name or the person's
+# Facebook id: a customer shows as "Khách Facebook <id>" and, inside one conversation, the commenters as "Khách 1",
+# "Khách 2"... in the order they first wrote. Comment TEXT is passed as written.
+KENH_AN_TEN = frozenset({"facebook"})
+
+
+def _an_ten(kenh) -> bool:
+    return str(kenh or "").strip().lower() in KENH_AN_TEN
+
+
+def _bo_tim_ten(ds, q):
+    """A name search must not confirm that someone commented on a Facebook Page: with a search word, hidden-name rows
+    are left out (their stored name is the only thing the word could have matched besides notes and tags)."""
+    return [c for c in ds if not _an_ten(c.get("channel"))] if q else ds
+
+
 def _khach_gon(c):
+    an = _an_ten(c.get("channel"))
     return {
-        "id": c["id"], "ten": c.get("name") or "(chưa có tên)",
+        "id": c["id"], "ten": f"Khách Facebook {c['id']}" if an else (c.get("name") or "(chưa có tên)"),
         "kenh": c.get("channel_label") or c.get("channel"), "tai_khoan": c.get("account_name") or "",
-        "id_tren_kenh": c.get("external_user_id"), "tags": c.get("tags") or [],
+        "id_tren_kenh": "" if an else c.get("external_user_id"), "tags": c.get("tags") or [],
         "ghi_chu": c.get("note") or "", "so_tin": c.get("so_tin") or 0,
         "lan_dau": _gio(c.get("first_seen_at")), "lan_cuoi": _gio(c.get("last_seen_at")),
     }
 
 
 def _hoi_thoai_gon(v):
+    an = _an_ten(v.get("channel"))
     return {
-        "id": v["id"], "ten": v.get("title") or v.get("customer_name") or v.get("external_chat_id"),
+        "id": v["id"], "ten": (v.get("title") or v.get("external_chat_id")) if an
+        else (v.get("title") or v.get("customer_name") or v.get("external_chat_id")),
         "kenh": v.get("channel_label") or v.get("channel"),
         "bot_id": v.get("bot_id") or "", "loai": "nhóm" if v.get("chat_type") == "group" else "riêng",
         "che_do": v.get("mode"), "khach_id": v.get("customer_id"),
@@ -92,6 +112,36 @@ def _hoi_thoai_gon(v):
         "luc": _gio(v.get("last_message_at")), "chua_doc": v.get("unread_count") or 0,
         "so_tin": v.get("message_count") or 0, "tags": v.get("customer_tags") or [],
     }
+
+
+def _nhan_khach(ds):
+    """Commenter -> "Khách N" for one conversation, numbered by first message. A comment Meta sent without its author
+    (development mode) has no key: "Khách Facebook"."""
+    nhan, n = {}, 0
+    for m in ds:
+        if m.get("sender_type") != "customer":
+            continue
+        k = str(m.get("sender_id") or "") or str(m.get("sender_name") or "")
+        if k and k not in nhan:
+            n += 1
+            nhan[k] = f"Khách {n}"
+    return nhan
+
+
+def _tin_cua(st, v, limit):
+    """Messages of conversation `v` for a tool result, with commenters' names replaced on a hidden-name channel."""
+    ds = st.tin_nhan(v["id"], limit=limit)
+    if not _an_ten(v.get("channel")):
+        return [_tin_gon(m) for m in ds]
+    nhan = _nhan_khach(st.tin_nhan(v["id"], limit=500))
+    out = []
+    for m in ds:
+        d = _tin_gon(m)
+        if m.get("sender_type") == "customer":
+            k = str(m.get("sender_id") or "") or str(m.get("sender_name") or "")
+            d["ten"] = nhan.get(k) or "Khách Facebook"
+        out.append(d)
+    return out
 
 
 def _tin_gon(m):
@@ -116,6 +166,7 @@ def crm_khach_hang(args, ctx):
     ds = st.danh_sach_khach(channel=str(a.get("kenh") or "").strip().lower(), tag=str(a.get("tag") or "").strip(),
                            q=str(a.get("q") or "").strip(), days=_so(a.get("ngay"), 0, 0, 3650),
                            limit=_so(a.get("limit"), 50))
+    ds = _bo_tim_ten(ds, str(a.get("q") or "").strip())
     return _ra({"so_khach": len(ds), "khach": [_khach_gon(c) for c in ds]})
 
 
@@ -129,7 +180,7 @@ def crm_ho_so_khach(args, ctx):
         q = str(a.get("q") or "").strip()
         if not q:
             return "ERROR: cần 'khach_id' hoặc 'q' (tên / username / id trên kênh) để tìm khách."
-        ds = st.danh_sach_khach(q=q, limit=10)
+        ds = _bo_tim_ten(st.danh_sach_khach(q=q, limit=10), q)
         if not ds:
             return f"Không thấy khách nào khớp '{q}'."
         if len(ds) > 1:
@@ -147,7 +198,7 @@ def crm_ho_so_khach(args, ctx):
     hoi_thoai = []
     for v in st.hoi_thoai_cua_khach(kid):
         d = _hoi_thoai_gon(v)
-        d["tin_gan_nhat"] = [_tin_gon(m) for m in st.tin_nhan(v["id"], limit=so_tin)]
+        d["tin_gan_nhat"] = _tin_cua(st, v, so_tin)
         hoi_thoai.append(d)
     return _ra({"khach": _khach_gon(c), "hoi_thoai": hoi_thoai})
 
@@ -165,8 +216,7 @@ def crm_hoi_thoai(args, ctx):
         v = st.chi_tiet(cid)
         if not v:
             return f"ERROR: không có hội thoại id {cid}."
-        return _ra({"hoi_thoai": _hoi_thoai_gon(v),
-                    "tin": [_tin_gon(m) for m in st.tin_nhan(cid, limit=_so(a.get("limit"), 60, 1, 500))]})
+        return _ra({"hoi_thoai": _hoi_thoai_gon(v), "tin": _tin_cua(st, v, _so(a.get("limit"), 60, 1, 500))})
     ds = st.danh_sach(channel=str(a.get("kenh") or "").strip().lower(), bot_id=str(a.get("bot_id") or "").strip(),
                       q=str(a.get("q") or "").strip(), limit=_so(a.get("limit"), 30))
     if a.get("chua_doc"):
@@ -184,7 +234,9 @@ def crm_tim_tin(args, ctx):
         return "ERROR: thiếu 'q' (chữ cần tìm trong tin nhắn)."
     ds = st.tim_tin(q, channel=str(a.get("kenh") or "").strip().lower(), limit=_so(a.get("limit"), 40))
     return _ra({"so_tin": len(ds), "tin": [{
-        "hoi_thoai_id": m["conversation_id"], "khach": m.get("customer_name") or m.get("title") or m.get("external_chat_id"),
+        "hoi_thoai_id": m["conversation_id"],
+        "khach": (m.get("title") or m.get("external_chat_id")) if _an_ten(m.get("channel"))
+        else (m.get("customer_name") or m.get("title") or m.get("external_chat_id")),
         "kenh": m.get("channel"), "ai": m.get("sender_type"), "luc": _gio(m.get("created_at")), "text": m.get("text") or "",
     } for m in ds]})
 
@@ -271,6 +323,7 @@ def crm_xuat_csv(args, ctx):
         return "ERROR: không biết brain đang mở nên không biết ghi CSV vào đâu."
     ds = st.danh_sach_khach(channel=str(a.get("kenh") or "").strip().lower(), tag=str(a.get("tag") or "").strip(),
                            q=str(a.get("q") or "").strip(), days=_so(a.get("ngay"), 0, 0, 3650), limit=5000)
+    ds = _bo_tim_ten(ds, str(a.get("q") or "").strip())
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(["id", "ten", "kenh", "tai_khoan", "id_tren_kenh", "tags", "ghi_chu", "so_tin", "lan_dau", "lan_cuoi"])
@@ -297,7 +350,7 @@ def _t(ctx, name, desc, handler, min_mode, emoji, props, required=None):
 
 
 def register(ctx):
-    KENH = {"type": "string", "description": "Lọc kênh: telegram | zalo (bot) | zalo_personal (Zalo cá nhân). Trống = mọi kênh."}
+    KENH = {"type": "string", "description": "Lọc kênh: telegram | zalo (bot) | zalo_personal (Zalo cá nhân) | facebook (bình luận Fanpage, tên người bình luận đã thay bằng Khách 1, Khách 2). Trống = mọi kênh."}
     LIMIT = {"type": "integer", "description": "Số dòng tối đa."}
     _t(ctx, "crm_khach_hang",
        "CRM: danh sách khách hàng đã nhắn qua các kênh chat (Telegram, Zalo Bot, Zalo cá nhân), mới nhất trước. "

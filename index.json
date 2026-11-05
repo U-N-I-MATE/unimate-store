@@ -46,10 +46,10 @@
         "en": "Customer management (CRM)"
       },
       "description": {
-        "vi": "Sổ khách hàng đặt lên trang Hội thoại: khách từ Telegram, Zalo Bot, Zalo cá nhân; hồ sơ và lịch sử từng người, gắn tag, ghi chú, khách chờ trả lời, thống kê, xuất Excel. Kèm trợ lý CSKH và quy trình rà soát mỗi ngày. Cần UNI MATE 0.60.1 trở lên.",
-        "en": "A customer book on top of the Conversations page: customers from Telegram, Zalo Bot and personal Zalo; per-person profile and history, tags, notes, unanswered queue, stats, Excel export. Ships a support agent and a daily review workflow. Needs UNI MATE 0.60.1 or newer."
+        "vi": "Sổ khách hàng đặt lên trang Hội thoại: khách từ Telegram, Zalo Bot, Zalo cá nhân, bình luận Facebook (che tên người bình luận với AI); hồ sơ và lịch sử từng người, gắn tag, ghi chú, khách chờ trả lời, thống kê, xuất Excel. Kèm trợ lý CSKH và quy trình rà soát mỗi ngày. Cần UNI MATE 0.60.1 trở lên.",
+        "en": "A customer book on top of the Conversations page: customers from Telegram, Zalo Bot, personal Zalo and Facebook comments (commenters' names hidden from the AI); per-person profile and history, tags, notes, unanswered queue, stats, Excel export. Ships a support agent and a daily review workflow. Needs UNI MATE 0.60.1 or newer."
       },
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "UNI MATE"
       },
@@ -64,9 +64,9 @@
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.khach-hang-crm",
       "icon": "packs/unimate.khach-hang-crm/assets/khach-hang-crm.png",
       "download": {
-        "url": "dist/unimate-khach-hang-crm-1.0.0.zip",
-        "sha256": "fde6d516c9c7733e95fbf4e5502f5a06b5a76d2ab7b44d2842d936092b5869d8",
-        "size": 14217
+        "url": "dist/unimate-khach-hang-crm-1.1.0.zip",
+        "sha256": "457b424d5f68c0355ab3a8c66e0a044eeca818ba4fed0e7fe508c411e09ba168",
+        "size": 15508
       }
     },
     {

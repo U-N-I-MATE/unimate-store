@@ -31,6 +31,19 @@ Cần **UNI MATE 0.60.1 trở lên**. Bản cũ hơn thì gói bị tắt kèm l
 Không tool nào gửi tin hay gọi ra ngoài. Muốn trả lời khách thì vẫn dùng tool của kênh
 (`zalo_send_message`, bot Telegram) hoặc app trên điện thoại.
 
+## Bình luận Facebook: tên người bình luận không ra khỏi Hộp thư (1.1.0)
+
+Từ UNI MATE 0.448.0 Hộp thư có kênh **Bình luận Facebook**. Model đứng sau các tool `crm_*` chạy ở máy chủ bên ngoài,
+nên với kênh này kết quả tool **không bao giờ mang tên hay id Facebook** của người bình luận:
+
+- Trong một hội thoại (một bài đăng), người bình luận hiện **Khách 1, Khách 2...** theo thứ tự viết đầu tiên.
+  Bình luận Meta gửi không kèm tác giả hiện **Khách Facebook**.
+- Danh sách khách và file CSV ghi **Khách Facebook <số>**, bỏ trống id trên kênh. Tên hội thoại là tiêu đề bài đăng.
+- Tìm theo tên không trả về người bình luận Facebook, để tool không xác nhận một người đã bình luận.
+- Chữ trong bình luận giữ nguyên. Nếu khách tự gõ tên ai đó vào bình luận thì chữ đó vẫn đi theo bình luận.
+
+Tên thật chỉ xem được trong Hộp thư của UNI MATE. Các kênh khác (Telegram, Zalo) không đổi gì.
+
 ## Ví dụ hỏi trong chat
 
 - "Có khách nào chờ hơn 2 tiếng chưa được trả lời không?"

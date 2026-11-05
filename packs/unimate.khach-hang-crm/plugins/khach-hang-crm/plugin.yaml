@@ -1,6 +1,6 @@
 name: Quản lý khách hàng (CRM)
 slug: khach-hang-crm
-version: 1.0.0
+version: 1.1.0
 description: Khách hàng từ mọi kênh chat (Telegram, Zalo Bot, Zalo cá nhân) - danh sách khách, hồ sơ và lịch sử từng người, gắn tag / ghi chú, hội thoại chờ trả lời, thống kê, xuất CSV. Đọc kho hội thoại của UNI MATE, không gọi mạng.
 author: UNI MATE
 enabled: true
