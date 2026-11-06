@@ -1,7 +1,7 @@
 {
   "format": "unimate-pack-index",
   "format_version": 1,
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "store": {
     "name": "Kho cài đặt UNI MATE",
     "url": "https://github.com/U-N-I-MATE/unimate-store"
@@ -3508,7 +3508,7 @@
         "vi": "Skill của REA (Reverse Engineer Anything), repo AI đang nổi nhất GitHub: phân tích app Electron/JavaScript, tệp chạy, firmware và trang web khi không có mã nguồn, so sánh phiên bản, dịch ngược. Cần cài công cụ rea (npm rea-agents).",
         "en": "The REA (Reverse Engineer Anything) skill, GitHub's top trending AI repo: analyse Electron/JavaScript apps, binaries, firmware and web apps without their source, compare versions, decompile. Needs the rea tool (npm rea-agents)."
       },
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": {
         "name": "morluto",
         "url": "https://github.com/morluto/rea"
@@ -3520,15 +3520,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-05",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.rea",
       "source": "https://github.com/morluto/rea",
       "license": "MIT",
       "upstream": {
         "repo": "morluto/rea",
         "ref": "main",
-        "commit": "fe677f6cf9853fb12490dfb8ef23ccae3a551049",
-        "synced": "2026-11-05"
+        "commit": "abdbaa544ad3e63444a58bebd1708cc51b136a8b",
+        "synced": "2026-11-06"
       },
       "provides": {
         "skills": [
@@ -3536,9 +3536,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-rea-1.0.5.zip",
-        "sha256": "288fba8186603f5f24c4a176cd550d10d4783a160fe5efa3223680d2d2c19360",
-        "size": 66765
+        "url": "dist/unimate-rea-1.0.6.zip",
+        "sha256": "78d15652549cefb59890ed5720b23d7b394842f8cf3e3e4f0d0129057282b603",
+        "size": 67567
       }
     },
     {
@@ -3863,7 +3863,7 @@
         "vi": "Trọn bộ agency-agents, hơn 280 agent chuyên gia theo 18 nhóm: lập trình, thiết kế, marketing, quảng cáo, bán hàng, tài chính, bảo mật, làm game, bản đồ GIS, chuyên gia ngành. Mỗi agent có tính cách, quy trình và đầu ra rõ ràng. Muốn cài lẻ từng agent thì tìm ở tab Agent.",
         "en": "The full agency-agents set, 280+ expert agents in 18 divisions: engineering, design, marketing, paid media, sales, finance, security, game development, GIS, industry specialists. Each has a personality, process and clear deliverables. To install one at a time, see the Agents tab."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "msitarzewski",
         "url": "https://github.com/msitarzewski/agency-agents"
@@ -3875,15 +3875,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.agency-agents",
       "source": "https://github.com/msitarzewski/agency-agents",
       "license": "MIT",
       "upstream": {
         "repo": "msitarzewski/agency-agents",
         "ref": "main",
-        "commit": "b37b5bb33b78f2c1d6567d98e25ca818e3259219",
-        "synced": "2026-10-29"
+        "commit": "b859c515d813efcfc4755d3471dd9e7686c7706d",
+        "synced": "2026-11-06"
       },
       "provides": {
         "agents": [
@@ -4173,9 +4173,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-agency-agents-1.0.0.zip",
-        "sha256": "513581319f2b1a9acd73a003dd0bc23db02bc7c818d6e55f4094bb2646e25d3d",
-        "size": 1760514
+        "url": "dist/unimate-agency-agents-1.0.1.zip",
+        "sha256": "10d9a626926a6a31fd9225edbec0648a55bbc5accb9b98313339d37b545a61cb",
+        "size": 1766135
       }
     },
     {
@@ -9259,7 +9259,7 @@
         "vi": "Vận hành đồ thị danh tính dùng chung cho nhiều AI agent, để agent nào hỏi \"thực thể này là ai\" cũng nhận cùng một câu trả lời, kể cả khi ghi đồng thời.",
         "en": "Operates a shared identity graph that multiple AI agents resolve against. Ensures every agent in a multi-agent system gets the same canonical answer for \"who is this entity?\" - deterministically, even under concurrent writes."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "msitarzewski",
         "url": "https://github.com/msitarzewski/agency-agents"
@@ -9271,7 +9271,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.agency.identity-graph-operator",
       "source": "https://github.com/msitarzewski/agency-agents/blob/main/specialized/identity-graph-operator.md",
       "license": "MIT",
@@ -9282,9 +9282,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-agency-identity-graph-operator-1.0.0.zip",
-        "sha256": "7b92834fe0d47847826e39fcd1e56eaa6c143881b292199a35caccf30444ebb2",
-        "size": 8438
+        "url": "dist/unimate-agency-identity-graph-operator-1.0.1.zip",
+        "sha256": "5b14bf09ec646c81524efc9ddc7daca4a1bd855e36e49f5c1037fdd797d01fe1",
+        "size": 8695
       }
     },
     {
@@ -13198,7 +13198,7 @@
         "vi": "Bảo mật phòng thủ: quét mọi lần nộp code tìm khoá bí mật và dữ liệu nhạy cảm trước tiên, rồi triển khai hoặc soát các lớp kiểm soát bảo mật theo chuẩn của tổ chức.",
         "en": "Defensive application security specialist who scans every code submission for secrets and sensitive data exposure before anything else, then implements or audits security controls following the organization's security standard - covering authentication, authorization, tokens, cookies, HTTP..."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "msitarzewski",
         "url": "https://github.com/msitarzewski/agency-agents"
@@ -13210,7 +13210,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.agency.security-senior-secops",
       "source": "https://github.com/msitarzewski/agency-agents/blob/main/security/security-senior-secops.md",
       "license": "MIT",
@@ -13221,9 +13221,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-agency-security-senior-secops-1.0.0.zip",
-        "sha256": "874a0347bdccb999e1573a5ab9979a3c7a192f3b7b51021843e2f8a93510deb5",
-        "size": 14683
+        "url": "dist/unimate-agency-security-senior-secops-1.0.1.zip",
+        "sha256": "930f8edd661c0ef2283a14f553049ed7abfbf569ef4ccf7ed191c8a454e9dccd",
+        "size": 14879
       }
     },
     {
@@ -14134,7 +14134,7 @@
         "vi": "Kế hoạch tài chính, quản lý ngân sách, phân tích hiệu quả kinh doanh. Giữ tài chính lành mạnh, tối ưu dòng tiền, đưa góc nhìn tài chính cho tăng trưởng.",
         "en": "Expert financial analyst and controller specializing in financial planning, budget management, and business performance analysis. Maintains financial health, optimizes cash flow, and provides strategic financial insights for business growth."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "msitarzewski",
         "url": "https://github.com/msitarzewski/agency-agents"
@@ -14146,7 +14146,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.agency.support-finance-tracker",
       "source": "https://github.com/msitarzewski/agency-agents/blob/main/support/support-finance-tracker.md",
       "license": "MIT",
@@ -14157,9 +14157,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-agency-support-finance-tracker-1.0.0.zip",
-        "sha256": "cd4e0fb889cfc74b0c3a63471e7f134125d8695b83f90b0d016baa463728cb54",
-        "size": 9050
+        "url": "dist/unimate-agency-support-finance-tracker-1.0.1.zip",
+        "sha256": "9b2e71664f1ed5e7e66e235f75f03bd5692ea58d1af7f0a4a5466b4758653660",
+        "size": 9302
       }
     },
     {
@@ -14680,7 +14680,7 @@
         "vi": "Phân tích, tối ưu và tự động hoá quy trình ở mọi bộ phận để năng suất và hiệu quả cao nhất.",
         "en": "Expert process improvement specialist focused on analyzing, optimizing, and automating workflows across all business functions for maximum productivity and efficiency"
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "msitarzewski",
         "url": "https://github.com/msitarzewski/agency-agents"
@@ -14692,7 +14692,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-29",
+      "updated": "2026-11-06",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.agency.testing-workflow-optimizer",
       "source": "https://github.com/msitarzewski/agency-agents/blob/main/testing/testing-workflow-optimizer.md",
       "license": "MIT",
@@ -14703,9 +14703,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-agency-testing-workflow-optimizer-1.0.0.zip",
-        "sha256": "dbca9194982085b8255bd635e0b1d3539d7dfe149538dd740e237d2c4cee7b9c",
-        "size": 8716
+        "url": "dist/unimate-agency-testing-workflow-optimizer-1.0.1.zip",
+        "sha256": "a9c8d5e694ad9acb0f67c202619d4a716708b8cdb8b4745f59abe661468ca93a",
+        "size": 9041
       }
     },
     {
