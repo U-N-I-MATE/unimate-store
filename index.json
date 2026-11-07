@@ -1924,7 +1924,7 @@
         "vi": "Bộ skill quy trình làm việc nổi nhất cho dân lập trình (obra/superpowers): brainstorm trước khi code, viết và thực thi plan, TDD, gỡ lỗi có hệ thống, review code hai chiều, git worktree, kiểm chứng trước khi báo xong.",
         "en": "The most popular workflow skills for developers (obra/superpowers): brainstorm before coding, write and execute plans, TDD, systematic debugging, both sides of code review, git worktrees, verify before claiming done."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Jesse Vincent",
         "url": "https://github.com/obra/superpowers"
@@ -1936,15 +1936,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-28",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.superpowers",
       "source": "https://github.com/obra/superpowers",
       "license": "MIT",
       "upstream": {
         "repo": "obra/superpowers",
         "ref": "main",
-        "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
-        "synced": "2026-10-28"
+        "commit": "22f0b463e7a5e579904dd6211a520321035526f7",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -1966,9 +1966,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-superpowers-1.0.1.zip",
-        "sha256": "cb2017a78369d57c0708704403e4c6fa3d69130473d029268ce628aaa6b620b5",
-        "size": 196663
+        "url": "dist/unimate-superpowers-1.0.2.zip",
+        "sha256": "55909cbf6b4b2b1d361e147cda6adc3adce91bee72a4923da63563c4243c039e",
+        "size": 195464
       }
     },
     {
@@ -2930,7 +2930,7 @@
         "vi": "Skill của Lemomo dựng phim ngắn hoàn toàn bằng code theo 59 phong cách (sơn dầu, màu nước, ukiyo-e, ảnh vệ tinh...): kịch bản, hình, nhạc, lồng tiếng. Cần Node 20+, ffmpeg, Python 3.11+; chạy tốt nhất với Claude.",
         "en": "Lemomo's skill for short films made entirely in code in 59 styles (oil paint, watercolor, ukiyo-e, satellite...): story, picture, score, narration. Needs Node 20+, ffmpeg, Python 3.11+; tuned for Claude."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Lemomo",
         "url": "https://github.com/lemomo-ai/lemo-opuscar"
@@ -2942,15 +2942,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-03",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.lemo-opuscar",
       "source": "https://github.com/lemomo-ai/lemo-opuscar",
       "license": "MIT",
       "upstream": {
         "repo": "lemomo-ai/lemo-opuscar",
         "ref": "main",
-        "commit": "bebbbe1aa92a3cb4bb6f83500e61b23a17d1aa00",
-        "synced": "2026-11-03"
+        "commit": "5c05490cc55dfb54f8f4c333f0f0e79cb6500564",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -2958,9 +2958,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-lemo-opuscar-1.0.1.zip",
-        "sha256": "b49cb7594d0d86363abeea8595a507a534a49ee3dbe3caf27b77f44ca21f3f48",
-        "size": 7026
+        "url": "dist/unimate-lemo-opuscar-1.0.2.zip",
+        "sha256": "f7670b0a4269dd649a4d164373b44d5c31db0b4917b42a8233c1f8dda4b08e2f",
+        "size": 8072
       }
     },
     {
@@ -3290,7 +3290,7 @@
         "vi": "Bộ skill của HeyGen để AI làm video bằng HTML: lên ý tưởng, dựng cảnh, hoạt hình, slideshow, lấy thiết kế từ Figma, chuyển dự án Remotion sang, rồi xuất video. Cần Node 22+ và ffmpeg.",
         "en": "HeyGen's skills for making video in HTML: plan, build scenes, animate, slideshows, pull designs from Figma, migrate Remotion projects, then render. Needs Node 22+ and ffmpeg."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "HeyGen",
         "url": "https://github.com/heygen-com/hyperframes"
@@ -3302,15 +3302,15 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-11-03",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.hyperframes",
       "source": "https://github.com/heygen-com/hyperframes",
       "license": "Apache-2.0",
       "upstream": {
         "repo": "heygen-com/hyperframes",
         "ref": "main",
-        "commit": "47dddedd6cd1dea646c5ae53d40bb5821f45590f",
-        "synced": "2026-11-03"
+        "commit": "555c788a333c592e9878139db318ea52f1315cec",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -3326,9 +3326,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-hyperframes-1.0.1.zip",
-        "sha256": "b3dd58eaa5d6851d7f7698ac476a0ede761363e2e531f4f0efcdb1b1a96f7dda",
-        "size": 2095785
+        "url": "dist/unimate-hyperframes-1.0.2.zip",
+        "sha256": "6bbdc15684e9157ae6073aade0ebc4e445793b5de1aa534e7e627fea2f331018",
+        "size": 2104363
       }
     },
     {
@@ -3342,7 +3342,7 @@
         "vi": "52 skill marketing của Corey Haines, repo marketing nhiều sao nhất: viết copy, tối ưu chuyển đổi, SEO và SEO cho AI, quảng cáo, email, định giá, ra mắt sản phẩm, giới thiệu bạn bè, đo lường, chống rời bỏ.",
         "en": "Corey Haines's 52 marketing skills, the most-starred marketing repo: copywriting, conversion, SEO and AI search, ads, email, pricing, launches, referrals, analytics and churn prevention."
       },
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "Corey Haines",
         "url": "https://github.com/coreyhaines31/marketingskills"
@@ -3354,15 +3354,15 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-11-03",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.marketingskills",
       "source": "https://github.com/coreyhaines31/marketingskills",
       "license": "MIT",
       "upstream": {
         "repo": "coreyhaines31/marketingskills",
         "ref": "main",
-        "commit": "88c79f6528a9347420e57ceb1fff9a60de651768",
-        "synced": "2026-11-03"
+        "commit": "96798cf38736ecdba015a1d2b0521b0c8f8f41dd",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -3422,9 +3422,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-marketingskills-1.0.2.zip",
-        "sha256": "d63aff1955096d32614b2ccf51b4abe58e3c403a47a07f30c5b3b6e8073f47e5",
-        "size": 1864044
+        "url": "dist/unimate-marketingskills-1.0.3.zip",
+        "sha256": "aaf41453ddd718916b56f4283149d574c7527ea6d0ff15ad91fc63e40bd2d33b",
+        "size": 1886001
       }
     },
     {
@@ -3552,7 +3552,7 @@
         "vi": "Bộ skill thiết kế giao diện nổi nhất: kho phong cách, bảng màu, cặp font và quy tắc UX để AI dựng trang web, landing page, banner, slide và hệ thống thiết kế đẹp ngay lần đầu. Cần Python 3.",
         "en": "The most popular interface design skills: a library of styles, palettes, font pairings and UX rules so the AI builds websites, landing pages, banners, slides and design systems that look right first time. Needs Python 3."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Next Level Builder",
         "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
@@ -3564,15 +3564,15 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-11-03",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.ui-ux-pro-max",
       "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
       "license": "MIT",
       "upstream": {
         "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
         "ref": "main",
-        "commit": "713eef51b04efc98d6fa565323b495f7c9c89fd4",
-        "synced": "2026-11-03"
+        "commit": "b7d5353e0130feb8c5574ef1251f8a1db1873ccb",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -3586,9 +3586,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-ui-ux-pro-max-1.0.1.zip",
-        "sha256": "6681acfd8b2e0ec1878b6ce10730566106faa6fa25c2e328839e078dee121005",
-        "size": 3558093
+        "url": "dist/unimate-ui-ux-pro-max-1.0.2.zip",
+        "sha256": "6dc82e61d216a1b88006b92914e684fb2fdfcc1c4db06747df7b88891ac45d99",
+        "size": 3559082
       }
     },
     {
@@ -3699,7 +3699,7 @@
         "vi": "Skill lập kế hoạch kiểu Manus: việc dài được chia thành kế hoạch, ghi chú và tiến độ trong tệp markdown, nên AI không quên mục tiêu giữa chừng và làm tiếp được sau khi gián đoạn.",
         "en": "Manus-style planning: long tasks keep their plan, findings and progress in markdown files, so the AI does not lose the goal halfway and can pick up after an interruption."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Ahmad Othman Adi",
         "url": "https://github.com/OthmanAdi/planning-with-files"
@@ -3711,15 +3711,15 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-11-03",
+      "updated": "2026-11-07",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.planning-with-files",
       "source": "https://github.com/OthmanAdi/planning-with-files",
       "license": "MIT",
       "upstream": {
         "repo": "OthmanAdi/planning-with-files",
         "ref": "master",
-        "commit": "0fa6c79885e14534074cb7df8535e1efa3dc7149",
-        "synced": "2026-11-03"
+        "commit": "8eef6dc6540dde5eef3fdc0ac487ad9c48ef3ba5",
+        "synced": "2026-11-07"
       },
       "provides": {
         "skills": [
@@ -3727,9 +3727,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-planning-with-files-1.0.1.zip",
-        "sha256": "8500c3eec6aff9ae94ae8d8295b5c5357ea3588a592410a745580f206dc74156",
-        "size": 179095
+        "url": "dist/unimate-planning-with-files-1.0.2.zip",
+        "sha256": "6f35750044c2ec7845a047638dbee36a20fabec939df27664107ba1acc051090",
+        "size": 179970
       }
     },
     {
