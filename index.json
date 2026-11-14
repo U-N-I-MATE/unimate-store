@@ -1,7 +1,7 @@
 {
   "format": "unimate-pack-index",
   "format_version": 1,
-  "updated": "2026-11-13",
+  "updated": "2026-11-14",
   "store": {
     "name": "Kho cài đặt UNI MATE",
     "url": "https://github.com/U-N-I-MATE/unimate-store"
@@ -3508,7 +3508,7 @@
         "vi": "Skill của REA (Reverse Engineer Anything), repo AI đang nổi nhất GitHub: phân tích app Electron/JavaScript, tệp chạy, firmware và trang web khi không có mã nguồn, so sánh phiên bản, dịch ngược. Cần cài công cụ rea (npm rea-agents).",
         "en": "The REA (Reverse Engineer Anything) skill, GitHub's top trending AI repo: analyse Electron/JavaScript apps, binaries, firmware and web apps without their source, compare versions, decompile. Needs the rea tool (npm rea-agents)."
       },
-      "version": "1.0.12",
+      "version": "1.0.13",
       "author": {
         "name": "morluto",
         "url": "https://github.com/morluto/rea"
@@ -3520,15 +3520,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-12",
+      "updated": "2026-11-14",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.rea",
       "source": "https://github.com/morluto/rea",
       "license": "MIT",
       "upstream": {
         "repo": "morluto/rea",
         "ref": "main",
-        "commit": "653c49419e65515d5567ebf13c0e6dd2ac794f7e",
-        "synced": "2026-11-12"
+        "commit": "2343e5692595ae9c08ce7de5bb91460118e67ed2",
+        "synced": "2026-11-14"
       },
       "provides": {
         "skills": [
@@ -3536,9 +3536,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-rea-1.0.12.zip",
-        "sha256": "3e5526f93cd48c1d98e31e78c98d6288fdf2d725ae1e3f522922e96dc0742c9f",
-        "size": 93394
+        "url": "dist/unimate-rea-1.0.13.zip",
+        "sha256": "326fcfc131b1dce58c7301f880c54384c8e058837e3cbe273c1fa17e9ec3d224",
+        "size": 93422
       }
     },
     {
