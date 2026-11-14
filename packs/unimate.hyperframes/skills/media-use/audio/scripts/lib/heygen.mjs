@@ -64,9 +64,20 @@ function envFileText(path) {
   }
 }
 
-// A host app sets these in the environment it spawns, never in a project file: a project's .env naming its own base
-// would send the person's shell HEYGEN_API_KEY to that host.
-const HOST_ONLY = new Set(["HEYGEN_API_BASE", "HEYGEN_ALLOW_HTTP"]);
+// A project .env may supply provider keys and harmless settings only, the same policy as the CLI. Everything
+// else comes from the person's own environment: a project naming the HeyGen base (HEYGEN_API_BASE) would send their
+// shell key to its host, and one setting HYPERFRAMES_PYTHON, NODE_OPTIONS, HYPERFRAMES_CONFIG_DIR or a credential
+// file would choose the programs and the account these scripts use.
+const PROJECT_ENV_KEYS = new Set([
+  "HEYGEN_API_KEY",
+  "HYPERFRAMES_API_KEY",
+  "ELEVENLABS_API_KEY",
+  "GEMINI_API_KEY",
+  "GOOGLE_API_KEY",
+  "HYPERFRAMES_TTS_CONCURRENCY",
+  "HYPERFRAMES_NO_TELEMETRY",
+  "DO_NOT_TRACK",
+]);
 
 // Walk up ≤5 dirs from startDir; load the first .env (shell env always wins).
 export function loadEnvFromDir(startDir) {
@@ -87,7 +98,7 @@ export function loadEnvFromDir(startDir) {
           const end = val.indexOf(q, 1);
           val = end > 0 ? val.slice(1, end) : val.slice(1);
         }
-        if (!HOST_ONLY.has(key) && !(key in process.env)) process.env[key] = val;
+        if (PROJECT_ENV_KEYS.has(key) && !(key in process.env)) process.env[key] = val;
       }
       return;
     }
@@ -228,9 +239,9 @@ function errorCode(body) {
 export function billingRefusal(e) {
   const code = e?.body ? errorCode(e.body) : null;
   if (code === "hf_subscription_required")
-    return "This needs a HyperFrames plan. Run `npx hyperframes billing subscribe`: it opens the page and waits.";
+    return "This needs a HyperFrames plan. Run `npx hyperframes billing subscribe --skill media-use`: it opens the page and waits.";
   if (code === "hf_usage_exhausted")
-    return "Out of HyperFrames credits. Run `npx hyperframes billing top-up`: it opens the page and waits.";
+    return "Out of HyperFrames credits. Run `npx hyperframes billing add-credits --skill media-use`: it opens the page and waits.";
   if (code === "api_key_required")
     return "This HeyGen feature isn't available with this sign-in yet. Nothing was charged. Use a HeyGen API key, or wait for HyperFrames billing in the CLI.";
   return null;
