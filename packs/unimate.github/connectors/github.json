@@ -86,7 +86,9 @@
       "submit_*",
       "remove_*",
       "reprioritize_*",
-      "request_pull_request_reviewers"
+      "request_pull_request_reviewers",
+      "create_automation",
+      "update_automation"
     ],
     "danger": [
       "delete_*",
@@ -103,7 +105,9 @@
       "label_write",
       "projects_write",
       "discussion_comment_write",
-      "issue_artifact_write"
+      "issue_artifact_write",
+      "run_automation",
+      "delete_automation"
     ]
   },
   "call_rules": {
@@ -148,8 +152,12 @@
     "remove_pull_request_review_comment_reaction",
     "remove_sub_issue",
     "manage_notification_subscription",
-    "manage_repository_notification_subscription"
+    "manage_repository_notification_subscription",
+    "list_available_automation_triggers"
   ],
+  "ghi_da_can_nhac_ly_do": {
+    "list_available_automation_triggers": "Tên có chữ trigger nhưng tool chỉ liệt kê các loại sự kiện kích hoạt mà automation của repo được dùng (GET .../available-triggers). Không tạo, không chạy gì. github-mcp-server v2.2.0 ghi readOnlyHint: true."
+  },
   "default_perm": "readonly",
-  "risk": "Mức Chỉ đọc: đọc code, issue, Pull Request, log CI, tìm kiếm. Không đổi gì.\n\nMức Ghi nháp: UNI MATE SỬA THẬT trên GitHub, gồm đẩy commit thẳng vào nhánh, tạo nhánh, sửa file, mở Pull Request, viết issue và bình luận, gửi review, ẩn hoặc hiện bình luận, mời người review, gỡ reaction và gỡ issue con, tạo và sửa nhãn, thêm và sửa mục Project, trả lời thảo luận, tạo và sửa artifact của issue. Mọi thứ vẫn nằm trong lịch sử git nên quay lại được, nhưng bình luận và review thì người khác đã thấy.\n\nMức Toàn quyền mở thêm nhóm nguy hiểm: TRỘN Pull Request vào nhánh chính, CHẠY lại hoặc huỷ workflow GitHub Actions (có thể deploy thật, tốn phút Actions), xoá file, XOÁ REPO, xoá nhãn, xoá mục và view trong Project, xoá bình luận thảo luận, xoá artifact của issue, đặt luật bảo vệ nhánh, giao việc cho Copilot (tiêu lượt Copilot trả phí).\n\nToken là hàng rào thật: chỉ chọn những repo và quyền bạn muốn UNI MATE đụng tới. Không cấp Administration thì UNI MATE không xoá được repo dù đang ở Toàn quyền."
+  "risk": "Mức Chỉ đọc: đọc code, issue, Pull Request, log CI, tìm kiếm. Không đổi gì.\n\nMức Ghi nháp: UNI MATE SỬA THẬT trên GitHub, gồm đẩy commit thẳng vào nhánh, tạo nhánh, sửa file, mở Pull Request, viết issue và bình luận, gửi review, ẩn hoặc hiện bình luận, mời người review, gỡ reaction và gỡ issue con, tạo và sửa nhãn, thêm và sửa mục Project, trả lời thảo luận, tạo và sửa artifact của issue, tạo và sửa automation Copilot của repo. Mọi thứ vẫn nằm trong lịch sử git nên quay lại được, nhưng bình luận và review thì người khác đã thấy.\n\nMức Toàn quyền mở thêm nhóm nguy hiểm: TRỘN Pull Request vào nhánh chính, CHẠY lại hoặc huỷ workflow GitHub Actions (có thể deploy thật, tốn phút Actions), xoá file, XOÁ REPO, xoá nhãn, xoá mục và view trong Project, xoá bình luận thảo luận, xoá artifact của issue, đặt luật bảo vệ nhánh, giao việc cho Copilot (tiêu lượt Copilot trả phí), CHẠY hoặc XOÁ automation Copilot của repo (mỗi lần chạy là Copilot tự làm việc trên repo theo lời giao đã lưu, có thể tiêu lượt Copilot).\n\nToken là hàng rào thật: chỉ chọn những repo và quyền bạn muốn UNI MATE đụng tới. Không cấp Administration thì UNI MATE không xoá được repo dù đang ở Toàn quyền."
 }
