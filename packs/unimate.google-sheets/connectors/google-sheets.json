@@ -44,13 +44,26 @@
     "guide_url": "https://github.com/xing5/mcp-google-sheets"
   },
   "tool_meta": {
+    "read": [
+      "get_sheet_data",
+      "get_sheet_formulas",
+      "list_sheets",
+      "get_multiple_sheet_data",
+      "get_multiple_spreadsheet_summary",
+      "get_spreadsheet_info",
+      "list_spreadsheets",
+      "list_folders",
+      "search_spreadsheets",
+      "find_in_spreadsheet"
+    ],
     "write": [
       "*create*",
       "*update*",
       "*add*",
       "*write*",
       "*batch*",
-      "*copy*"
+      "*copy*",
+      "rename_sheet"
     ],
     "danger": [
       "*share*"

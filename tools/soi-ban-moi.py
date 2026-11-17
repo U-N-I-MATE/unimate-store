@@ -13,6 +13,11 @@ KHÔNG khai, tên không chứa từ gợi ý ghi nào, vào nhóm ĐỌC, tức
 thật lúc viết script: `workspace-mcp` 2.x thêm `run_script_function` (chạy Apps Script) và UNI MATE
 xếp nó vào nhóm đọc.
 
+Từ UNI MATE 0.455.0 chiều đó đã đổi: tool không ai khai, MCP không tự gắn `readOnlyHint` /
+`destructiveHint`, tên không chứa từ gợi ý ghi nào, rơi về nhóm NGUY HIỂM (chỉ chạy ở Toàn quyền).
+Lọt lưới không còn thành lỗ, nhưng chặn oan một tool chỉ đọc vẫn là chuyện người dùng gặp, nên script
+vẫn liệt kê những tool chưa khai để khuôn khai cho đủ.
+
 `kiem-tra.py` chỉ soi được tên tool mà khuôn KHAI. Script này soi tên tool mà bản mới nhất THẬT
 SỰ có, phân loại bằng đúng hàm `classify` của UNI MATE, rồi áp cùng bộ luật tên (`luat_ten_tool.py`):
 
@@ -20,7 +25,9 @@ SỰ có, phân loại bằng đúng hàm `classify` của UNI MATE, rồi áp c
   nguy hiểm (trừ khi khuôn liệt kê nó trong `ghi_da_can_nhac`). Sửa bằng cách khai nó trong
   `tool_meta` của khuôn rồi ra bản gói mới.
 - Cảnh báo: MCP không khởi động được khi thiếu tài khoản đăng nhập (vài server đòi credential
-  ngay lúc mở), và tool chưa khai nằm ở nhóm đọc nhờ đoán theo tên, để người review liếc qua.
+  ngay lúc mở), và tool chưa khai: tool rơi về nhóm nguy hiểm chỉ vì không ai khai (UNI MATE
+  0.455.0 trở đi, sẽ bị chặn oan nếu thật ra chỉ đọc), tool được xếp nhờ gợi ý của chính MCP,
+  hay (lõi cũ hơn 0.455.0) tool đang được đoán là đọc.
 
 MCP CHÍNH CHỦ chạy từ xa (GitHub) không chạy thử được vì cần đăng nhập. Với chúng script đọc
 danh sách tool bên đó công bố trong mã nguồn của bản phát hành mới nhất, áp cùng luật trên cộng
@@ -51,6 +58,11 @@ TRAN_GIAY = 180   # lần đầu npx/uvx phải tải gói, nên rộng tay
 
 
 def _nap_classify():
+    """Hàm phân loại của UNI MATE dạng `(khuôn, tool, args, gợi ý) -> (nhóm, nguồn)`.
+
+    Lõi 0.455.0 trở đi có `classify_detail` (nhận cả annotations của MCP, và nói nhóm đến từ đâu:
+    "khai", "goi_y", "ten", "mac_dinh"). Lõi cũ hơn chỉ có `classify(khuôn, tool, args)`, chưa biết
+    gợi ý, và tool không ai khai thì rơi về đọc: khi đó nguồn trả "doan_doc" cho đúng nghĩa cũ."""
     os_dir = Path(os.environ.get("UNIMATE_OS_DIR") or GOC.parent / "UNI-MATE").resolve()
     server = os_dir / "server"
     if not (server / "mcp_catalog.py").is_file():
@@ -58,7 +70,25 @@ def _nap_classify():
     os.environ.setdefault("UNIMATE_STATE_DIR", tempfile.mkdtemp(prefix="unimate-soi-"))
     sys.path.insert(0, str(server))
     import mcp_catalog
-    return mcp_catalog.classify
+    chi_tiet = getattr(mcp_catalog, "classify_detail", None)
+    if chi_tiet is not None:
+        return lambda con, t, args=None, hints=None: chi_tiet(con, t, args, hints)
+    cu = mcp_catalog.classify
+
+    def theo_loi_cu(con, t, args=None, hints=None):
+        nhom = cu(con, t, args)
+        meta = con.get("tool_meta") or {}
+        khai = any(fnmatch(t.lower(), str(p).lower()) for k in ("read", "write", "danger")
+                   for p in (meta.get(k) or []))
+        return nhom, ("doan_doc" if nhom == "read" and not khai else "khai")
+    return theo_loi_cu
+
+
+def _goi_y_tu_nhan(nhan):
+    """Annotations tương đương với nhãn đọc/ghi/phá huỷ mà `chinh_chu.py` đọc từ mã nguồn bên chính chủ
+    (chính các annotations đó là thứ máy chủ từ xa trả về cho UNI MATE lúc liệt kê tool)."""
+    return {"read": {"readOnlyHint": True}, "write": {"readOnlyHint": False, "destructiveHint": False},
+            "destructive": {"readOnlyHint": False, "destructiveHint": True}}.get(nhan)
 
 
 # Service account GIẢ, đúng hình dạng nhưng khoá rỗng: đủ để vài server chịu khởi động và liệt
@@ -90,7 +120,9 @@ def _env_gia(con, thu_muc):
 
 
 def liet_ke_tool(con):
-    """(danh sách tên tool, lỗi). Chạy lệnh của khuôn với credential giả, xem `_env_gia`."""
+    """(danh sách tên tool, lỗi, {tên: annotations}). Chạy lệnh của khuôn với credential giả, xem
+    `_env_gia`. Annotations là thứ chính MCP gắn (readOnlyHint, destructiveHint), UNI MATE 0.455.0
+    dùng nó cho tool khuôn chưa khai."""
     cmd = shutil.which(con["command"]) or con["command"]
     # MCP kho tự build (`mcp/`): chạy tệp trong bản checkout này thay vì URL trên nhánh main, để
     # Pull Request thêm tệp mới soi được chính tệp đó trước khi trộn.
@@ -127,43 +159,54 @@ def liet_ke_tool(con):
                         "clientInfo": {"name": "unimate-store-soi", "version": "1"}}})
         m, e = nhan(1)
         if not m:
-            return None, e
+            return None, e, {}
         gui({"jsonrpc": "2.0", "method": "notifications/initialized"})
-        ten, con_tro = [], None
+        ten, con_tro, goi_y = [], None, {}
         for lan in range(50):
             gui({"jsonrpc": "2.0", "id": 2 + lan, "method": "tools/list",
                  "params": {"cursor": con_tro} if con_tro else {}})
             m, e = nhan(2 + lan)
             if not m:
-                return None, e
+                return None, e, {}
             kq = m.get("result") or {}
-            ten += [t["name"] for t in kq.get("tools") or []]
+            for t in kq.get("tools") or []:
+                ten.append(t["name"])
+                if isinstance(t.get("annotations"), dict):
+                    goi_y[t["name"]] = t["annotations"]
             con_tro = kq.get("nextCursor")
             if not con_tro:
                 break
-        return sorted(set(ten)), ""
+        return sorted(set(ten)), "", goi_y
     except (BrokenPipeError, OSError) as e:
-        return None, str(e)
+        return None, str(e), {}
     finally:
         hen.cancel()
         p.kill()
 
 
-def soi_ten(classify, con, nhan_goi, ten, nhan=None):
-    """(lỗi đỏ, tool chưa khai đang được đoán là đọc) cho bộ tên tool THẬT của một MCP.
+def soi_ten(classify, con, nhan_goi, ten, nhan=None, goi_y=None):
+    """(lỗi đỏ, {loại cảnh báo: [tool]}) cho bộ tên tool THẬT của một MCP.
 
-    `nhan`: {tên: nhãn} do bên chính chủ gắn (xem `chinh_chu.py`), nếu có. Nhãn đó mạnh hơn mọi
-    luật tên: vụ có thật lúc viết là `hide_issue_comment` của GitHub, tên không chứa từ ghi nào
-    nên UNI MATE xếp vào nhóm đọc, trong khi chính GitHub ghi rõ nó không chỉ đọc."""
-    meta = con.get("tool_meta") or {}
+    `classify` là hàm `_nap_classify()` trả về: (nhóm, nguồn). `goi_y`: {tên: annotations} chính MCP
+    gắn, nếu có. `nhan`: {tên: nhãn} do bên chính chủ gắn (xem `chinh_chu.py`), nếu có. Nhãn đó mạnh
+    hơn mọi luật tên: vụ có thật lúc viết là `hide_issue_comment` của GitHub, tên không chứa từ ghi
+    nào nên UNI MATE (trước 0.455.0) xếp vào nhóm đọc, trong khi chính GitHub ghi rõ nó không chỉ đọc.
+
+    Cảnh báo chia ba loại theo nguồn của nhóm: "mac_dinh" (không ai khai, rơi về nguy hiểm, bị chặn
+    oan nếu thật ra chỉ đọc), "goi_y" (xếp nhờ annotations của MCP, MCP bỏ annotations là đổi nhóm)
+    và "doan_doc" (lõi cũ hơn 0.455.0: không ai khai, đang được đoán là đọc)."""
+    goi_y = dict(goi_y or {})
+    for t, n in (nhan or {}).items():
+        goi_y.setdefault(t, _goi_y_tu_nhan(n))
     da_can_nhac = {str(x) for x in (con.get("ghi_da_can_nhac") or [])}
-    khai = [str(p).lower() for k in ("read", "write", "danger") for p in (meta.get(k) or [])]
-    do, chua_khai_doc = [], []
+    do, canh = [], {"mac_dinh": [], "goi_y": [], "doan_doc": []}
     for t in ten:
         # args={} chứ không phải None: phân loại như LÚC GỌI THẬT. Với args=None, tool cổng
         # (`call_rules`) và tool đa hành động (`arg_rules`) tạm coi là đọc để còn liệt kê
         # được; lúc gọi, args thiếu tên lệnh con thì chúng rơi về mức fail-closed.
-        nhom = classify(con, t, {})
+        nhom, nguon = classify(con, t, {}, goi_y.get(t))
+        if nguon in canh:
+            canh[nguon].append(t)
         if nhom == "danger":
             continue
         cua_ho = (nhan or {}).get(t, "?")
@@ -178,9 +221,21 @@ def soi_ten(classify, con, nhan_goi, ten, nhan=None):
             do.append(f"{nhan_goi}: tool '{t}' {ly_do} mà UNI MATE xếp vào nhóm {nhom}. Khai nó là "
                       f"danger trong tool_meta, hoặc thêm vào `ghi_da_can_nhac` nếu đã cân nhắc "
                       f"và thấy nó nhẹ")
-        elif nhom == "read" and not any(fnmatch(t.lower(), p) for p in khai):
-            chua_khai_doc.append(t)
-    return do, chua_khai_doc
+    return do, canh
+
+
+_LOI_CANH = {
+    "mac_dinh": "tool chưa khai, đang rơi về NGUY HIỂM vì không ai khai (bị chặn ở Chỉ đọc và Ghi nháp; "
+                "chỉ đọc thật thì khai vào read)",
+    "goi_y": "tool chưa khai, đang được xếp nhờ gợi ý của chính MCP (MCP bỏ gợi ý là đổi nhóm, nên khai)",
+    "doan_doc": "tool chưa khai, đang được ĐOÁN là đọc",
+}
+
+
+def cau_canh(nhan_goi, canh):
+    """Các dòng cảnh báo cho một MCP từ kết quả `soi_ten`."""
+    return [f"{nhan_goi}: {len(ds)} {_LOI_CANH[k]}: " + ", ".join(ds)
+            for k, ds in canh.items() if ds]
 
 
 def soi_chinh_chu(classify, ghi_da_soat=False):
@@ -204,11 +259,9 @@ def soi_chinh_chu(classify, ghi_da_soat=False):
             print(f"?? {nhan_goi}: {e}")
             continue
         ten = sorted(set(moi) | set(d.get("tool_chi_o_ban_tu_xa") or []))
-        do_ten, chua_khai_doc = soi_ten(classify, con, nhan_goi, ten, moi)
+        do_ten, canh_ten = soi_ten(classify, con, nhan_goi, ten, moi)
         do += do_ten
-        if chua_khai_doc:
-            canh.append(f"{nhan_goi}: {len(chua_khai_doc)} tool chưa khai, đang được ĐOÁN là đọc: "
-                        + ", ".join(chua_khai_doc))
+        canh += cau_canh(nhan_goi, canh_ten)
 
         for t, ds in sorted(moi_lenh.items()):
             luat = (con.get("call_rules") or {}).get(t) or {}
@@ -264,16 +317,14 @@ def main():
             continue
         so += 1
         nhan_goi = f"{f.parent.parent.name}/{con.get('id')}"
-        ten, e = liet_ke_tool(con)
+        ten, e, goi_y = liet_ke_tool(con)
         if ten is None:
             canh.append(f"{nhan_goi}: không mở được để soi ({e})")
             print(f"?? {nhan_goi}: {e}")
             continue
-        do_ten, chua_khai_doc = soi_ten(classify, con, nhan_goi, ten)
+        do_ten, canh_ten = soi_ten(classify, con, nhan_goi, ten, goi_y=goi_y)
         do += do_ten
-        if chua_khai_doc:
-            canh.append(f"{nhan_goi}: {len(chua_khai_doc)} tool chưa khai, đang được ĐOÁN là đọc: "
-                        + ", ".join(chua_khai_doc))
+        canh += cau_canh(nhan_goi, canh_ten)
         print(f"ok {nhan_goi}: {len(ten)} tool")
 
     do_cc, canh_cc, so_cc = soi_chinh_chu(classify, "--ghi-da-soat" in sys.argv[1:])

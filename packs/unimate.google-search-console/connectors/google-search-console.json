@@ -38,5 +38,19 @@
     "guide": "Làm 1 lần:\n1. Tạo service account + key JSON trong Google Cloud Console, nhớ bật Search Console API.\n2. Vào Search Console > Cài đặt > Người dùng và quyền, thêm email của service account.\n3. Dán nội dung file JSON vào đây.",
     "guide_url": "https://github.com/ahonn/mcp-server-gsc"
   },
-  "default_perm": "readonly"
+  "default_perm": "readonly",
+  "tool_meta": {
+    "read": [
+      "list_sites",
+      "search_analytics",
+      "enhanced_search_analytics",
+      "detect_quick_wins",
+      "index_inspect",
+      "list_sitemaps",
+      "get_sitemap"
+    ],
+    "write": [
+      "submit_sitemap"
+    ]
+  }
 }

@@ -128,7 +128,8 @@
       "get_note",
       "list_labels",
       "list_note_collaborators",
-      "list_note_media"
+      "list_note_media",
+      "download_media"
     ],
     "write": [
       "create_note",
@@ -143,21 +144,28 @@
       "restore_note",
       "create_label",
       "add_label_to_note",
-      "remove_label_from_note"
+      "remove_label_from_note",
+      "move_list_item",
+      "reorder_list_items"
     ],
     "danger": [
       "trash_note",
       "delete_note",
       "delete_label",
       "add_note_collaborator",
-      "remove_note_collaborator"
+      "remove_note_collaborator",
+      "replace_list_items"
     ]
   },
-  "default_perm": "readonly",
-  "risk": "Kết nối này dùng Google MASTER TOKEN, loại token có TOÀN QUYỀN tài khoản Google (Gmail, Drive, Photos), không phải OAuth giới hạn phạm vi như Gmail hay Lịch.\n\nMức Ghi nháp cho UNI MATE tạo và sửa note, ghim, lưu trữ, gắn nhãn thật trong Keep.\n\nMức Toàn quyền thêm quyền VỨT, XOÁ note và CHIA SẺ note cho người khác.\n\nNếu đã gõ true vào ô UNSAFE_MODE thì UNI MATE đụng được cả note bạn viết tay, không riêng note nó tạo.",
   "ghi_da_can_nhac": [
     "delete_list_item",
     "restore_note",
-    "remove_label_from_note"
-  ]
+    "remove_label_from_note",
+    "reorder_list_items"
+  ],
+  "ghi_da_can_nhac_ly_do": {
+    "reorder_list_items": "Chỉ đổi thứ tự các dòng trong một danh sách ghi chú, không xoá nội dung, sắp lại được."
+  },
+  "default_perm": "readonly",
+  "risk": "Kết nối này dùng Google MASTER TOKEN, loại token có TOÀN QUYỀN tài khoản Google (Gmail, Drive, Photos), không phải OAuth giới hạn phạm vi như Gmail hay Lịch.\n\nMức Ghi nháp cho UNI MATE tạo và sửa note, ghim, lưu trữ, gắn nhãn thật trong Keep.\n\nMức Toàn quyền thêm quyền VỨT, XOÁ note, THAY TOÀN BỘ các dòng của một danh sách và CHIA SẺ note cho người khác.\n\nNếu đã gõ true vào ô UNSAFE_MODE thì UNI MATE đụng được cả note bạn viết tay, không riêng note nó tạo."
 }

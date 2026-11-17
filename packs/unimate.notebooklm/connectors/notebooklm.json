@@ -87,7 +87,9 @@
       "research_status",
       "share_status",
       "suggest_prompts",
-      "server_info"
+      "server_info",
+      "chat_status",
+      "source_list_play_books"
     ],
     "write": [
       "notebook_create",
@@ -104,7 +106,8 @@
       "studio_download",
       "research_start",
       "research_import",
-      "research_cancel"
+      "research_cancel",
+      "chat_start"
     ],
     "danger": [
       "notebook_delete",

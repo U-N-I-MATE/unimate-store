@@ -105,7 +105,8 @@
       "list_drafts",
       "get_thread",
       "search_threads",
-      "list_labels"
+      "list_labels",
+      "get_message"
     ],
     "write": [
       "create_draft",
