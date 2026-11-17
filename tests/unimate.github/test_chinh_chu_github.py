@@ -56,17 +56,25 @@ con = json.loads((STORE / d["connector"]).read_text(encoding="utf-8"))
 # 1. Bộ đã soát được khuôn phân loại sạch.
 check("chinh-chu/github.json đúng cấu trúc", chinh_chu.loi_cau_truc(d) == [], chinh_chu.loi_cau_truc(d))
 ten = sorted(set(d["tools"]) | set(d.get("tool_chi_o_ban_tu_xa") or []))
-do, doan = S.soi_ten(classify, con, "github", ten, d["tools"])
+do, canh = S.soi_ten(classify, con, "github", ten, d["tools"])
 check("mọi tool đã soát qua luật phân loại", do == [], do)
-check("không tool đã soát nào còn phải đoán là đọc", doan == [], doan)
+check("không tool đã soát nào còn phải đoán là đọc", canh["doan_doc"] == [], canh["doan_doc"])
+check("không tool đã soát nào rơi về nguy hiểm chỉ vì không ai khai", canh["mac_dinh"] == [], canh["mac_dinh"])
 for t, nhan in d["tools"].items():
     if nhan in ("write", "destructive"):
-        check(f"{t}: GitHub ghi là {nhan} thì UNI MATE không xếp vào nhóm đọc", classify(con, t, {}) != "read")
+        check(f"{t}: GitHub ghi là {nhan} thì UNI MATE không xếp vào nhóm đọc",
+              classify(con, t, {}, S._goi_y_tu_nhan(nhan))[0] != "read")
 
 # 2. Nhãn chính chủ thắng luật tên.
 trong = {"id": "x", "tool_meta": {}}
 do, _ = S.soi_ten(classify, trong, "x", ["hide_issue_comment"], {"hide_issue_comment": "write"})
-check("tool ghi tên lạ mà UNI MATE xếp đọc thì đỏ", len(do) == 1 and "KHÔNG chỉ đọc" in do[0], do)
+# Lõi trước 0.455.0 xếp tool ghi tên lạ vào đọc, nên phải đỏ. Lõi 0.455.0 xếp nó vào nguy hiểm (không ai
+# khai, gợi ý không nói chỉ đọc), tức không lọt: không đỏ.
+nhom_la = classify(trong, "hide_issue_comment", {}, S._goi_y_tu_nhan("write"))[0]
+if nhom_la == "read":
+    check("tool ghi tên lạ mà UNI MATE xếp đọc thì đỏ", len(do) == 1 and "KHÔNG chỉ đọc" in do[0], do)
+else:
+    check("tool ghi tên lạ không lọt nhóm đọc thì không đỏ", do == [] and nhom_la == "danger", (nhom_la, do))
 do, _ = S.soi_ten(classify, trong, "x", ["hide_issue_comment"], {})
 check("không có nhãn thì chỉ còn luật tên (không đỏ oan)", do == [], do)
 co_meta = {"id": "x", "tool_meta": {"write": ["label_write"]}}
@@ -148,7 +156,7 @@ for t, ds in (d.get("lenh") or {}).items():
     khai = {x for k in ("read_values", "write_values", "danger_values") for x in luat.get(k) or []}
     check(f"{t}: mọi lệnh đã soát đều được khai trong call_rules", set(ds) <= khai, set(ds) - khai)
     check(f"{t}: lệnh có chữ delete là danger",
-          all(classify(con, t, {"method": v}) == "danger" for v in ds if "delete" in v))
+          all(classify(con, t, {"method": v})[0] == "danger" for v in ds if "delete" in v))
 check("lệnh thêm và bớt được nêu đúng",
       chinh_chu.khac_biet_lenh({"x": ["create", "delete"]}, {"x": ["create", "archive"]})
       == ["x thêm lệnh archive", "x bớt lệnh delete"])

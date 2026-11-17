@@ -96,7 +96,8 @@
       "browser_stop_video",
       "browser_video_chapter",
       "browser_video_hide_actions",
-      "browser_video_show_actions"
+      "browser_video_show_actions",
+      "browser_emulate_media"
     ],
     "danger": [
       "browser_run_code_unsafe",

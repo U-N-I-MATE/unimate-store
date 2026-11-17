@@ -50,9 +50,12 @@ Cả mã nguồn lẫn tệp `.zip` đều phải có trong PR. Thiếu một tr
 UNI MATE xếp mỗi tool vào ba nhóm `read` / `write` / `danger`, khai trong `tool_meta` của khuôn
 connector. Mức **Ghi nháp** của người dùng tự chạy được mọi thứ trong nhóm `write` mà không hỏi.
 
-Điều phải biết: **UNI MATE KHÔNG tự đoán ra `danger`.** Tool nào bạn không khai rõ thì cùng lắm nó
-rơi vào `write` theo tên. Nên một tool xoá dữ liệu hay tiêu tiền mà bạn quên khai sẽ tự chạy ở
-mức Ghi nháp, im lặng, cho tới lúc nó xoá thật.
+Tool bạn không khai thì UNI MATE (từ 0.455.0) xếp theo thứ tự: gợi ý của chính MCP
+(`destructiveHint: true` là `danger`, `readOnlyHint: true` là `read`), rồi tên có từ gợi ý ghi
+(create, update, delete, send...) là `write`, còn lại là `danger`. Điều phải biết: **một tool có từ
+ghi trong tên mà bạn quên khai chỉ rơi vào `write`**, kể cả tool xoá dữ liệu hay tiêu tiền, tức tự
+chạy ở mức Ghi nháp, im lặng, cho tới lúc nó xoá thật. Ngược lại, một tool chỉ đọc mà bạn quên khai
+(và MCP không gắn `readOnlyHint`) bị chặn oan ở mức Chỉ đọc. Nên khai đủ mọi tool.
 
 `tools/kiem-tra.py` chặn hai lớp:
 
@@ -104,12 +107,14 @@ riêng: KHÔNG thư viện phụ thuộc (đọc hết được trong một lầ
 token ra log. `tools/mcp_dong_goi.py <tên>` đóng `.tgz` ra đúng một sha256, trình kiểm so từng tệp trong
 `.tgz` với thư mục nguồn, và test của nó đặt ở `tests/<id gói>/` chạy chính tệp đã đóng gói.
 
-Cái giá của luật là bản mới có thể mang **tool mới chưa ai phân loại**, và UNI MATE xếp một tool
-không khai, tên không chứa từ gợi ý ghi nào, vào nhóm **đọc** (vụ thật lúc đặt luật:
-`workspace-mcp` 2.x thêm `run_script_function`). Vì vậy CI có thêm job `soi-ban-moi`, chạy mỗi
-ngày: nó chạy thử bản mới nhất thật của từng MCP, phân loại tool thật bằng đúng hàm của UNI MATE,
-và đỏ khi có tool phá huỷ hay tiêu tiền chưa nằm ở nhóm `danger`. Thấy đỏ thì khai tool đó trong
-`tool_meta` rồi ra bản gói mới. Chạy tay:
+Cái giá của luật là bản mới có thể mang **tool mới chưa ai phân loại**. Trước UNI MATE 0.455.0, tool
+không khai, tên không chứa từ gợi ý ghi nào, rơi vào nhóm **đọc** (vụ thật lúc đặt luật:
+`workspace-mcp` 2.x thêm `run_script_function`); từ 0.455.0 nó rơi vào nhóm **nguy hiểm**, an toàn
+nhưng có thể chặn oan một tool chỉ đọc. Vì vậy CI có thêm job `soi-ban-moi`, chạy mỗi ngày: nó chạy
+thử bản mới nhất thật của từng MCP, phân loại tool thật bằng đúng hàm của UNI MATE (kèm gợi ý
+`readOnlyHint`/`destructiveHint` mà MCP trả về), đỏ khi có tool phá huỷ hay tiêu tiền chưa nằm ở nhóm
+`danger`, và cảnh báo mọi tool chưa khai. Thấy đỏ hay cảnh báo thì khai tool đó trong `tool_meta`
+rồi ra bản gói mới. Chạy tay:
 
     UNIMATE_OS_DIR=../UNI-MATE python tools/soi-ban-moi.py
 

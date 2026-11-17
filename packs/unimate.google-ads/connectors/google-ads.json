@@ -86,7 +86,12 @@
       "customers_*",
       "metadata_*",
       "search_*"
+    ],
+    "danger": [
+      "labels_manage_labels",
+      "labels_manage_label_associations"
     ]
   },
+  "risk": "Mức Chỉ đọc: xem tài khoản, chiến dịch và số liệu quảng cáo. Không đổi gì.\n\nMức Toàn quyền mở thêm quyền TẠO, SỬA, GỠ NHÃN (label) trên tài khoản và chiến dịch quảng cáo thật. Nhãn không tiêu tiền nhưng là dữ liệu dùng chung với người quản trị tài khoản khác.",
   "default_perm": "readonly"
 }

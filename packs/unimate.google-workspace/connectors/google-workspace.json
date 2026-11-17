@@ -92,6 +92,53 @@
     ]
   },
   "tool_meta": {
+    "read": [
+      "generate_trigger_code",
+      "get_contact",
+      "get_contact_group",
+      "get_doc_as_markdown",
+      "get_doc_content",
+      "get_drive_file_content",
+      "get_drive_file_download_url",
+      "get_drive_shareable_link",
+      "get_events",
+      "get_form",
+      "get_gmail_message_content",
+      "get_gmail_messages_content_batch",
+      "get_gmail_thread_content",
+      "get_messages",
+      "get_presentation",
+      "get_script_activity",
+      "get_script_project",
+      "get_script_version",
+      "get_spreadsheet_info",
+      "get_task",
+      "list_calendars",
+      "list_contact_groups",
+      "list_contacts",
+      "list_docs_in_folder",
+      "list_document_comments",
+      "list_drive_items",
+      "list_form_responses",
+      "list_gmail_filters",
+      "list_gmail_labels",
+      "list_script_deployments",
+      "list_sheet_tables",
+      "list_spaces",
+      "list_spreadsheets",
+      "list_tasks",
+      "query_freebusy",
+      "read_sheet_values",
+      "render_page_to_image",
+      "search_contacts",
+      "search_custom",
+      "search_docs",
+      "search_drive_files",
+      "search_gmail_messages",
+      "search_messages",
+      "download_chat_attachment",
+      "get_gmail_attachment_content"
+    ],
     "write": [
       "*create*",
       "*update*",
@@ -102,7 +149,12 @@
       "*add*",
       "*set*",
       "*manage*",
-      "import_*"
+      "import_*",
+      "copy_drive_file",
+      "export_doc_to_pdf",
+      "insert_doc_elements",
+      "find_and_replace_doc",
+      "format_sheet_range"
     ],
     "danger": [
       "*send*",
@@ -110,9 +162,13 @@
       "run_*"
     ]
   },
-  "default_perm": "safe",
-  "risk": "Mức Ghi nháp (mặc định) cho phép UNI MATE soạn nháp thư, tạo lịch, tạo tài liệu, và cả SỬA tài liệu có sẵn lẫn DI CHUYỂN file trong Drive.\nCác tool gộp (manage_event, manage_task...) cũng thuộc mức này, nên UNI MATE sửa và xoá được từng sự kiện lịch hay việc cần làm lẻ.\n\nMức Toàn quyền thêm quyền GỬI EMAIL THẬT và XOÁ file, thư bằng tài khoản Google của bạn.\n\nChỉ cần đọc thì hạ xuống Chỉ đọc.",
   "ghi_da_can_nhac": [
-    "generate_trigger_code"
-  ]
+    "generate_trigger_code",
+    "list_script_deployments"
+  ],
+  "ghi_da_can_nhac_ly_do": {
+    "list_script_deployments": "Chỉ liệt kê các bản triển khai Apps Script đã có, không triển khai gì (workspace-mcp ghi readOnlyHint: true)."
+  },
+  "default_perm": "safe",
+  "risk": "Mức Ghi nháp (mặc định) cho phép UNI MATE soạn nháp thư, tạo lịch, tạo tài liệu, và cả SỬA tài liệu có sẵn lẫn DI CHUYỂN file trong Drive.\nCác tool gộp (manage_event, manage_task...) cũng thuộc mức này, nên UNI MATE sửa và xoá được từng sự kiện lịch hay việc cần làm lẻ.\n\nMức Toàn quyền thêm quyền GỬI EMAIL THẬT và XOÁ file, thư bằng tài khoản Google của bạn.\n\nChỉ cần đọc thì hạ xuống Chỉ đọc."
 }

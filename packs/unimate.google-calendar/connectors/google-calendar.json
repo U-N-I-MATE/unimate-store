@@ -121,7 +121,8 @@
       "list_events",
       "get_event",
       "list_calendars",
-      "suggest_time"
+      "suggest_time",
+      "search_events"
     ],
     "write": [
       "create_event",

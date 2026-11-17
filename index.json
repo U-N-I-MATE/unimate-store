@@ -342,7 +342,7 @@
       "description": {
         "vi": "Để AI tự thiết kế và sửa landing page Webcake bằng lời nói (tạo trang, sửa section, publish...). Chạy local qua npx, mỗi tài khoản 1 JWT."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "UNI MATE"
       },
@@ -352,7 +352,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.webcake-landing",
       "icon": "packs/unimate.webcake-landing/assets/webcake.jpg",
       "provides": {
@@ -361,9 +361,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-webcake-landing-1.0.1.zip",
-        "sha256": "1bcfe3ebba0ac225d07031ffcd28cb8b57a20c94bb2631d92cad9eed1e5c219d",
-        "size": 10449
+        "url": "dist/unimate-webcake-landing-1.0.2.zip",
+        "sha256": "bdcdff19195db959bd155b61699eb1d0158ddb236d2175e4407a9b14d5e1bdf3",
+        "size": 10531
       }
     },
     {
@@ -408,7 +408,7 @@
       "description": {
         "vi": "Đọc/ghi bảng tính Google: đổ báo cáo doanh thu, tồn kho, công nợ ra Sheets tự động. Đấu bằng service account - không cần đăng nhập."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "UNI MATE"
       },
@@ -418,7 +418,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-sheets",
       "icon": "packs/unimate.google-sheets/assets/google-sheets.png",
       "provides": {
@@ -427,9 +427,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-sheets-1.0.1.zip",
-        "sha256": "fff0d859ecc7db77044c38fe0e968f690d4a720b613bee33837d63773b68819a",
-        "size": 7572
+        "url": "dist/unimate-google-sheets-1.0.2.zip",
+        "sha256": "9a8d1363c246ac8f501df79f54b8b1c913c67f0783f09027f65aba5915144b99",
+        "size": 7660
       }
     },
     {
@@ -441,7 +441,7 @@
       "description": {
         "vi": "Số liệu SEO website: khách tìm từ khoá gì ra trang của bạn, lượt hiển thị, lượt bấm, trang top."
       },
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "UNI MATE"
       },
@@ -451,7 +451,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-search-console",
       "icon": "packs/unimate.google-search-console/assets/google-search-console.png",
       "provides": {
@@ -460,9 +460,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-search-console-1.0.3.zip",
-        "sha256": "9fabef9e218f9bb528225defe9f8dea76f176eb9c566fe331c47b2a0cbfa12bc",
-        "size": 9956
+        "url": "dist/unimate-google-search-console-1.0.4.zip",
+        "sha256": "414ad41353ec62e392fa557ca659fa1bd4fe621fd80fd616a02b4dc7cae37a3d",
+        "size": 10052
       }
     },
     {
@@ -474,7 +474,7 @@
       "description": {
         "vi": "Gmail, Calendar, Drive, Docs, Sheets, Slides, Forms, Tasks... trong MỘT kết nối. Tạo OAuth client 1 lần, khoảng 10 phút, có hướng dẫn từng bước. Lần đầu gọi tool Google, trình duyệt TRÊN MÁY CHẠY UNI MATE mở ra để bấm đồng ý, nên máy phải có màn hình."
       },
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "UNI MATE"
       },
@@ -484,7 +484,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-workspace",
       "icon": "packs/unimate.google-workspace/assets/google-workspace.png",
       "provides": {
@@ -493,9 +493,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-workspace-1.0.3.zip",
-        "sha256": "a98851c1f6a4ae5c6dbb16103f2439e3c91275f36b06e0a6edb811a901702c47",
-        "size": 13253
+        "url": "dist/unimate-google-workspace-1.0.4.zip",
+        "sha256": "b0d41b3cad1245becaf9dfe4a4e9fbcb1f1689be697ac2e46aa2426cd460c53a",
+        "size": 13732
       }
     },
     {
@@ -672,7 +672,7 @@
       "description": {
         "vi": "Số liệu Google Ads qua MCP chính chủ của Google (chỉ đọc): chiến dịch, chi phí, chuyển đổi, từ khoá qua truy vấn GAQL. Chạy local; cần developer token + Google Cloud, cài 1 lần hơi kỹ thuật."
       },
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "UNI MATE"
       },
@@ -682,7 +682,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-ads",
       "icon": "packs/unimate.google-ads/assets/google-ads.webp",
       "provides": {
@@ -691,9 +691,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-ads-1.0.1.zip",
-        "sha256": "3725a4db3924ac9d8f20df79754662e58a4920b1a9c70b0289758a0aa8b5eddd",
-        "size": 28377
+        "url": "dist/unimate-google-ads-1.0.2.zip",
+        "sha256": "a4cdae748e1c6cddf8dfaab3a59685f28538668d61bfb018d97b236f695f0e96",
+        "size": 28566
       }
     },
     {
@@ -738,7 +738,7 @@
       "description": {
         "vi": "Lịch Google qua MCP chính chủ của Google: xem lịch, tìm chỗ trống, tạo/sửa sự kiện, nhắc hẹn. Đăng nhập Google trong dashboard, chạy được cả trên VPS. Cần tạo OAuth client + ghi danh Developer Preview của Google 1 lần (~10 phút)."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "UNI MATE"
       },
@@ -748,7 +748,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-09-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-calendar",
       "icon": "packs/unimate.google-calendar/assets/google-calendar.png",
       "provides": {
@@ -757,9 +757,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-calendar-1.0.0.zip",
-        "sha256": "eca6789ec2db77013081ba6710c1a8c273bde4994216229cbc0b4db47fc8cdf9",
-        "size": 12662
+        "url": "dist/unimate-google-calendar-1.0.1.zip",
+        "sha256": "005cb76a69623aa2e30be755e748c153fa297f0b54131394fe7d022d768e4755",
+        "size": 12669
       }
     },
     {
@@ -771,7 +771,7 @@
       "description": {
         "vi": "Gmail qua MCP chính chủ của Google: đọc và tìm thư, soạn NHÁP, gắn nhãn sắp xếp hộp thư. Server chính chủ KHÔNG có tool gửi thẳng - luôn dừng ở bản nháp để bạn tự bấm gửi. Cần tạo OAuth client + ghi danh Developer Preview của Google 1 lần."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "UNI MATE"
       },
@@ -781,7 +781,7 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-09-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.gmail",
       "icon": "packs/unimate.gmail/assets/gmail.webp",
       "provides": {
@@ -790,9 +790,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-gmail-1.0.0.zip",
-        "sha256": "04b5b7939eadea2ed2af66aa7b15f523ce050ff9158c300424b6533e9bee8a05",
-        "size": 16730
+        "url": "dist/unimate-gmail-1.0.1.zip",
+        "sha256": "1f69b4d6e1db4d8da3350ae7eaa2c48b23d095b40401bc1988788dd45c56f147",
+        "size": 16736
       }
     },
     {
@@ -1070,7 +1070,7 @@
       "description": {
         "vi": "Đọc và sửa ghi chú Google Keep: tìm note, tạo note và danh sách việc, gắn nhãn, ghim, lưu trữ. LƯU Ý: Keep không có API chính chủ nên phải dùng master token có TOÀN QUYỀN tài khoản Google, không phải OAuth giới hạn phạm vi như Gmail hay Lịch. UNI MATE chỉ thao tác được ghi chú, nhưng token thì mở cả tài khoản nếu bị lộ."
       },
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "UNI MATE"
       },
@@ -1080,7 +1080,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.google-keep",
       "icon": "packs/unimate.google-keep/assets/google-keep.png",
       "provides": {
@@ -1089,9 +1089,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-google-keep-1.0.3.zip",
-        "sha256": "aa068e919e458f5ea6140d5aeb4dedde91f51b75188d9421924a8d766297e97f",
-        "size": 9432
+        "url": "dist/unimate-google-keep-1.0.4.zip",
+        "sha256": "7328e68f4cd17f499177cea579945a110d5f7d801b5d0b55701d86e10a90ced6",
+        "size": 9542
       }
     },
     {
@@ -1103,7 +1103,7 @@
       "description": {
         "vi": "Đọc và thao tác notebook trên Google NotebookLM: liệt kê notebook, đọc nguồn, hỏi đáp ngay trong notebook, thêm nguồn, lưu ghi chú, tạo tóm tắt/audio ở Studio. LƯU Ý: NotebookLM chưa có API chính chủ nên phải mượn PHIÊN ĐĂNG NHẬP trình duyệt (cookie Google), không phải OAuth giới hạn phạm vi như Gmail hay Lịch."
       },
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "UNI MATE"
       },
@@ -1113,7 +1113,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-10-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.notebooklm",
       "icon": "packs/unimate.notebooklm/assets/notebooklm.png",
       "provides": {
@@ -1122,9 +1122,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-notebooklm-1.0.3.zip",
-        "sha256": "3483391b5416592f1e1fe18fdd05e57acf9034a8a0374b77600507a7494a9333",
-        "size": 14361
+        "url": "dist/unimate-notebooklm-1.0.4.zip",
+        "sha256": "e1766d001cafd9e72885425055c2cb789400ab15344b3cd8444292f7ab7953f2",
+        "size": 14378
       }
     },
     {
@@ -1982,7 +1982,7 @@
         "vi": "Điều khiển trình duyệt thật qua Playwright MCP chính chủ của Microsoft: mở trang, đọc cấu trúc trang, điền form, bấm nút, chụp màn hình, xuất PDF, chạy kiểm thử đầu-cuối. Không cần API key. Mặc định chạy hồ sơ TÁCH BIỆT và ẩn cửa sổ.",
         "en": "Drive a real browser through Microsoft's official Playwright MCP: open pages, read page structure, fill forms, click, screenshot, export PDF, run end-to-end tests. No API key. Defaults to an isolated, headless profile."
       },
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "Microsoft",
         "url": "https://github.com/microsoft/playwright-mcp"
@@ -1994,7 +1994,7 @@
       },
       "tier": "code",
       "verified": true,
-      "updated": "2026-09-05",
+      "updated": "2026-11-17",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.playwright",
       "icon": "packs/unimate.playwright/assets/playwright.png",
       "source": "https://github.com/microsoft/playwright-mcp",
@@ -2005,9 +2005,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-playwright-1.0.2.zip",
-        "sha256": "507e0743e59c0591bbaa9279d1a86d550b08a6574a6ba5a838c8107437a1ce09",
-        "size": 21167
+        "url": "dist/unimate-playwright-1.0.3.zip",
+        "sha256": "f9961a26acf2456066bda35ad32e4d2adcd5688d072da8009244cf2034b9a074",
+        "size": 21177
       }
     },
     {
