@@ -1,7 +1,7 @@
 {
   "format": "unimate-pack-index",
   "format_version": 1,
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "store": {
     "name": "Kho cài đặt UNI MATE",
     "url": "https://github.com/U-N-I-MATE/unimate-store"
@@ -3508,7 +3508,7 @@
         "vi": "Skill của REA (Reverse Engineer Anything), repo AI đang nổi nhất GitHub: phân tích app Electron/JavaScript, tệp chạy, firmware và trang web khi không có mã nguồn, so sánh phiên bản, dịch ngược. Cần cài công cụ rea (npm rea-agents).",
         "en": "The REA (Reverse Engineer Anything) skill, GitHub's top trending AI repo: analyse Electron/JavaScript apps, binaries, firmware and web apps without their source, compare versions, decompile. Needs the rea tool (npm rea-agents)."
       },
-      "version": "1.0.19",
+      "version": "1.0.20",
       "author": {
         "name": "morluto",
         "url": "https://github.com/morluto/rea"
@@ -3520,15 +3520,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-20",
+      "updated": "2026-11-21",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.rea",
       "source": "https://github.com/morluto/rea",
       "license": "MIT",
       "upstream": {
         "repo": "morluto/rea",
         "ref": "main",
-        "commit": "ad2b34ca9b30769ec8ff8ef26025a38a9a32c589",
-        "synced": "2026-11-20"
+        "commit": "9a66726389aa74d4a7e49874d641ba085ae6c087",
+        "synced": "2026-11-21"
       },
       "provides": {
         "skills": [
@@ -3536,9 +3536,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-rea-1.0.19.zip",
-        "sha256": "9b43f64e87079d8ffab8b0278fa91f7c8972eb178ae870d50c5ddfa5aee8a0b3",
-        "size": 97718
+        "url": "dist/unimate-rea-1.0.20.zip",
+        "sha256": "d89b1314e3f6b167d27e1911e46580429f90298f0ac3141110d7f8ecedf9fdde",
+        "size": 97804
       }
     },
     {
@@ -3602,7 +3602,7 @@
         "vi": "Skill chính chủ của Vercel: thực hành tốt nhất cho React và Next.js, React Native, hiệu ứng chuyển trang, nguyên tắc thiết kế giao diện web, viết nội dung rõ ràng, và triển khai lên Vercel.",
         "en": "Vercel's official skills: React and Next.js best practices, React Native, view transitions, web interface design guidelines, clear writing, and deploying to Vercel."
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Vercel",
         "url": "https://github.com/vercel-labs/agent-skills"
@@ -3614,15 +3614,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-10-28",
+      "updated": "2026-11-21",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.vercel-skills",
       "source": "https://github.com/vercel-labs/agent-skills",
       "license": "MIT",
       "upstream": {
         "repo": "vercel-labs/agent-skills",
         "ref": "main",
-        "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
-        "synced": "2026-10-28"
+        "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+        "synced": "2026-11-21"
       },
       "provides": {
         "skills": [
@@ -3638,9 +3638,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-vercel-skills-1.0.0.zip",
-        "sha256": "f7f333161b6ca497f2a7b5b51f37f9763fe90d7cc234296d26854cce499b4eb2",
-        "size": 552909
+        "url": "dist/unimate-vercel-skills-1.0.1.zip",
+        "sha256": "d9cc49cbfa352ec3c5b416725ce489ea194bafffd239cbd25a4ac06590d4ca8c",
+        "size": 558728
       }
     },
     {
