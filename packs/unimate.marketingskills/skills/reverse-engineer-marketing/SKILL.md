@@ -1,8 +1,8 @@
 ---
 name: reverse-engineer-marketing
-description: "When the user wants to reverse engineer how another company grew and copy what worked. Also use when the user mentions 'reverse engineer,' 'how did X grow,' 'how does X get customers,' 'growth teardown,' 'marketing teardown,' 'GTM teardown,' 'growth blueprint,' 'what is X doing for marketing,' 'what made X take off,' 'copy X's playbook,' 'X's distribution strategy,' 'what content works for X,' 'funnel hack,' 'map their funnel,' or 'watch what X is doing.' Builds a dated log of a company's moves against its traffic curve from public data, sign-ups and demos, team interviews, and hidden signals (DNS, certificate logs, archives, sponsorships), compares it with the user's own data, and turns what lined up with growth into plays routed to the skill that runs each one. For a snapshot profile of a competitor's positioning, pricing, and features, see competitor-profiling. For comparison pages, see competitors. For why a single post went viral, see social."
+description: "When the user wants to know how another company grew and what to copy, or asks what a competitor did and when: a dated log of their moves against their traffic from public data, archives, job posts, reviews, and their funnel, compared with the user's data, ending in plays routed to other skills. Also finds where competitors are weak. For a snapshot profile, see competitor-profiling. For comparison pages, see competitors."
 metadata:
-  version: 1.0.0
+  version: 1.2.0
 ---
 
 # Reverse Engineer Marketing
@@ -24,6 +24,8 @@ Gather this context (ask for anything missing before the first paid call):
 4. **The user's company.** Domain, category, stage (pre-launch, early revenue, scaling), and the channels they have capacity to run. Plays are filtered by fit.
 5. **The user's data.** Which of their own sources are connected: Search Console, GA4 or another analytics tool, ad accounts, social accounts. These power the gap step.
 6. **Data tools and budget.** Which paid sources they have (see [references/data-sources.md](references/data-sources.md)) and a cap for paid calls (default $5).
+
+   **What a run costs.** Quick mode can stay at $0 if it uses only the bundled script and manual checks. A full teardown's paid calls (traffic history, keywords by URL, backlinks, ad and social pulls) should be quoted as a range before the first paid call, then tracked against the cap (default $5). Tell the user the expected paid-call count and a dollar range for this target before Stage 2. If the range would exceed the cap, switch to Quick or ask to raise it. The typical range is left blank until it is filled in from a measured run on a named site, one Quick with free collectors only and one Teardown with a connected SEO tool, with the actual vendor cost recorded. Do not guess a figure.
 7. **Country.** For traffic and keyword estimates. Default: US.
 
 ### Modes
@@ -34,6 +36,7 @@ Gather this context (ask for anything missing before the first paid call):
 | **Content** | Only titles, thumbnails, hooks, carousels, "what content works for X" | Handles from stage 2, then stage 6 |
 | **Quick** | A first look, a small budget, prep for a call | Stage 1 and the free stage 5 commands, stage 2 headlines, stage 9 with five plays |
 | **Funnel Hack** | "Map their whole funnel," "what are their upsells," "how do they sell" | Stage 3 with purchases, using [references/funnel-hack.md](references/funnel-hack.md) |
+| **Landscape** | "What is everyone in my category doing," several competitors, picking who to study | `compare` across three to five competitors, using [references/landscape.md](references/landscape.md) |
 | **Watch** | Ongoing monitoring of a company already torn down | The monthly diff in the Watch Mode section |
 
 ## Evidence Standard
@@ -110,7 +113,7 @@ Confirm the industry with the user, then read the matching pack below. Each pack
 | Events and entertainment | [industries/events-entertainment.md](references/industries/events-entertainment.md) |
 | Media and creators | [industries/media-creators.md](references/industries/media-creators.md) |
 
-Industry commands: `shopify` (public catalog with dates, bestseller order, apps), `phones` (call-tracking check), `filings` (SEC filings and Form D raises), `cfpb` (consumer complaints by month), and `fdic` (bank quarterly financials). The packs say when to run each.
+Industry commands: `shopify` (public catalog with dates, bestseller order, apps), `phones` (call-tracking check), `filings` (SEC filings and Form D raises), `cfpb` (consumer complaints by month), `fdic` (bank quarterly financials), and `adoption` (npm and PyPI downloads and GitHub stars by month). The packs say when to run each. For developer tools, monthly downloads from one registry can serve as the traffic curve.
 
 Each ad pixel's first month becomes a move (`kind: ad-start`, evidence: Inferred, since a pixel shows the channel was possible, not that ads ran). Each pricing change becomes a move. Then mark the **inflection**: the month where growth stepped up and stayed up for at least two months. There can be more than one.
 
@@ -122,7 +125,7 @@ Walk the target's funnel one stage at a time. Each finding goes in the write-up,
 
 | Channel | What to collect |
 |---|---|
-| **Search** | Ranked keywords by URL, from the user's SEO tool (DataForSEO, Semrush, Ahrefs, or Similarweb; without one, only page families from `site` are available). Map them to the page families from `site`. Report brand vs non-brand share and which families carry non-brand traffic. Check which families existed before the inflection (Wayback) and which came after. |
+| **Search** | Ranked keywords by URL, from the user's SEO tool (DataForSEO, Semrush, Ahrefs, or Similarweb; without one, only page families from `site` are available). Map them to the page families from `site`. Report brand vs non-brand share and which families carry non-brand traffic. Check which families existed before the inflection (Wayback) and which came after. When an SEO tool is connected, add a page-family table: family, how the pages are made (written one by one, or one template filled from a dataset), share of non-brand traffic or ranking keywords, top URL, and whether the family existed before the inflection. Open the top page of the three families that carry the most non-brand traffic and say how each is built. If the tool can be scoped to a path or subdomain, measure each family's share that way, so the table isn't only the first twenty rows. If no SEO tool is connected, list the families from `site` and mark shares unavailable. |
 | **AI answers** | The same prompt set for the target and the user in a connected prompt tracker (share of voice and citations over time), or by hand in ChatGPT, Perplexity, Gemini, and Google AI Overviews: the order brands are named and which pages are cited. Options in [references/data-sources.md](references/data-sources.md); method in **ai-seo**. |
 | **Paid** | Per network, from `sc-ads` (ScrapeCreators) or the ad library links: active ads, the longest-running ad (45+ days suggests it's worth testing, though performance is unknown), the hook, the offer, and the landing page. No ads found → Observed "no ads found in [library, filter, date]", which is not proof they don't advertise. Read creative in depth with **ad-creative**. |
 | **Social and creators** | The founders' and brand's best posts, the most-viewed creator videos and threads about the company, and every contest, giveaway, launch-week, or invite drop. Label each item team, creator (paid if disclosed), user, or press. |
@@ -138,7 +141,7 @@ Plans, prices, what's free, and how the trial ends (days, credits, or usage). Th
 
 ### Referral
 
-Every place a non-user meets the product: shared outputs, public pages, embeds, invites, and "made with" or "powered by" badges. Confirm loops with backlink anchor data: one anchor text on thousands of domains is a loop, and its first-seen date dates it. Note any affiliate or referral program (the `stack` command catches Rewardful, PartnerStack, Tolt, FirstPromoter, and Dub) and its reward.
+Every place a non-user meets the product: shared outputs, public pages, embeds, invites, and "made with" or "powered by" badges. Confirm loops with backlink anchor data: one anchor text on thousands of domains is a loop, and its first-seen date dates it. Note any affiliate or referral program (the `stack` command catches Rewardful, PartnerStack, Tolt, FirstPromoter, and Dub) and its reward. When backlink data is available, group the strongest referring domains by the page type they point at (homepage vs a tool, a report, a template family, or a single cited page). List the non-homepage types that keep attracting strong links, with two or three example URLs. Route a play to **link-building** or **free-tools** only when that page type is something the user can actually ship. If no backlink source is connected, mark the section unavailable and do not invent counts.
 
 ### Retention and Expansion Signals
 
@@ -146,7 +149,7 @@ These are lighter evidence, but they're dated: changelog cadence, lifecycle emai
 
 ### Hiring
 
-Open roles from the last 30 days show which channel is being scaled next: growth, SEO, paid, lifecycle, community, devrel, partnerships, video, or a new country. Stage 4 reads the full posts.
+`teardown.mjs jobs <domain>` reads a public Greenhouse, Lever, or Ashby board: open roles by function, the marketing channels being hired for, tools named in the posts, languages required, and first-marketing-hire signals. New roles show which channel is being scaled next. Stage 4 reads the full posts.
 
 ## Stage 3: Go Inside
 
@@ -181,6 +184,7 @@ node scripts/teardown.mjs dns target.com                    # email senders, too
 node scripts/teardown.mjs subdomains target.com             # subdomains by first certificate date: tools, programs, campaigns
 node scripts/teardown.mjs hero target.com --months 24       # homepage headline changes: positioning shifts by month
 node scripts/teardown.mjs sitemap-growth target.com         # sitemap size and page families by month
+node scripts/teardown.mjs reviews "Target" --domain target.com  # App Store review volume by month and complaint terms
 ```
 
 Also sweep **paid promotion** the ad libraries miss: newsletter sponsorships, podcast ads, YouTube sponsorships, affiliates, coupon sites, and event sponsorships. And check **growth counters** off the website: review velocity, app ranks, GitHub stars, community size, marketplace listings, and AI visibility over time. Every dated finding becomes a move.
@@ -221,7 +225,11 @@ Compare the target with the user's own company, stage by stage, so the plays add
 | Acquisition: search | 480 `/templates/*` pages, ~41% of non-brand traffic (Observed) | 12 template pages, 900 impressions/mo (GSC) | Page family missing |
 | Referral | "Made with" badge on free outputs since 2024-12 (Observed) | No badge | Loop missing |
 
-If the user has no data connected, run the same third-party checks on their domain and mark the comparison as estimate vs estimate.
+If the user has no data connected, run the same third-party checks on their domain and mark the comparison as estimate vs estimate. `teardown.mjs compare target.com --you yours.com` plus one more competitor gives a quick signal-by-signal list of what the target has that the user doesn't.
+
+### Where They're Weak
+
+Then turn it around: where is the target losing? Mine 1-2 star reviews (`reviews`), "switched from" and alternative posts, price rises, search families they dropped, markets they left, and slow support from stage 3. Group the complaints into themes with counts and dates, and check which line up with a dated move. Each theme the user can solve becomes a play: an alternative page, a switching offer, a positioning angle, a battle card. Method, sources, and the rules for comparative claims are in [references/weak-spots.md](references/weak-spots.md).
 
 ## Stage 9: Plays
 
@@ -233,6 +241,8 @@ Each play includes:
 - Effort (a day, a week, a quarter), time to first result, the metric to watch, and cost to try
 - **A paste-ready prompt** that invokes that skill with the specifics filled in: the pages to build, the posts to write using the formula from stage 6, the events to track
 
+Before the plays, list **what won't transfer**: advantages that aren't a play you can run, such as brand searches, years of accumulated links, or an audience and funding the user doesn't have. If most of the target's search traffic is its brand name, say so here, and don't treat total traffic as the model.
+
 Also list **plays to skip**: ones that look good but the evidence doesn't support, or that worked because of something the user doesn't have (a big round, an existing audience, a famous founder). End with **the one play to start this week**. The output template is in [references/playbook-template.md](references/playbook-template.md).
 
 ---
@@ -241,12 +251,14 @@ Also list **plays to skip**: ones that look good but the evidence doesn't suppor
 
 Once a teardown exists, rerun it monthly and report only what's new.
 
-1. Re-run `stack`, `history`, `hero`, `site`, `dns`, and `subdomains`, plus the industry pack's commands (`shopify`, `cfpb`, `fdic`, `filings`), check the ad libraries and paid promotion, and pull the last month's posts and new interviews. Append new dated moves to a fresh `moves.csv`.
+1. Re-run `stack`, `history`, `hero`, `site`, `dns`, `subdomains`, `jobs`, and `reviews`, plus the industry pack's commands (`shopify`, `cfpb`, `fdic`, `filings`, `adoption`), check the ad libraries and paid promotion, and pull the last month's posts and new interviews. Append new dated moves to a fresh `moves.csv`.
 2. Diff the new log against the old one:
    ```bash
    node scripts/teardown.mjs diff --old teardowns/target/moves-2026-09.csv --new teardowns/target/moves.csv --out teardowns/target/new-moves.csv
    ```
-3. Report only meaningful new moves: a new ad network, a new page family, a new loop, a pricing change, a new content format, a burst of hiring in one channel. Write "no new moves" when there are none, which is the usual result.
+3. Report only meaningful new moves: a new ad network, a new page family, a new loop, a pricing change, a new content format, a burst of hiring in one channel, a new complaint theme.
+
+   **Launch radar:** when two or more of these land within a few weeks (a new subdomain, a trademark filing, new job titles in one area, a sitemap jump, a new domain verification), flag a likely launch and say what it points to. Write "no new moves" when there are none, which is the usual result.
 4. For each new move, say whether it changes a play and which skill to hand it to.
 
 To schedule it, run it as the growth-move watch loop in **marketing-loops**, keeping the dated move logs as its state.
@@ -255,8 +267,8 @@ To schedule it, run it as the growth-move watch loop in **marketing-loops**, kee
 
 In `teardowns/<target>/`:
 
-1. **`playbook.md`** (`content.md` in Content mode, `watch-<month>.md` in Watch mode): summary, curve and inflection, timeline, funnel findings, inside-the-product storyboard, team claims, hidden signals, content patterns, gap table, plays with prompts, plays to skip, method notes
-2. **Data**: `traffic.csv`, `moves.csv`, `moves-vs-growth.csv`, `urls.csv`, `voices.csv`, `inside/emails.csv`, posts per channel
+1. **`playbook.md`** (`content.md` in Content mode, `watch-<month>.md` in Watch mode, `teardowns/landscape/landscape.md` in Landscape mode): summary, scorecard, curve and inflection, timeline, funnel findings, inside-the-product storyboard, team claims, hidden signals, content patterns, gap table, where they're weak, plays with prompts, plays to skip, method notes
+2. **Data**: `traffic.csv`, `moves.csv`, `moves-vs-growth.csv`, `urls.csv`, `voices.csv`, `jobs.csv`, `reviews.csv`, `inside/emails.csv`, posts per channel
 3. **Screenshots**: `inside/screens/`, numbered in flow order
 4. **Contact sheets**: top vs bottom thumbnails per channel
 5. Optionally a one-file HTML page with the curve, every move pinned to it, and a copy button per prompt
@@ -278,11 +290,13 @@ In `teardowns/<target>/`:
 | Copying staged urgency | Check timers and stock counts in two sessions before treating them as a lever |
 | Taking a founder's story as the timeline | Label it "reported" and check it against the dated data |
 | Generic plays ("post more on LinkedIn") | Name the skill, the formula, the assets, and the metric |
+| Calling one angry thread a weakness | A theme needs five or more low reviews across more than one month |
+| Treating a gap nobody fills as an opportunity | Check search demand and Wayback first; it may have been tried and dropped |
 
 ## Task-Specific Questions
 
 1. Which company, and over what window?
-2. Teardown, content only, quick, funnel hack, or watch?
+2. Teardown, content only, quick, funnel hack, landscape, or watch?
 3. What's your company, stage, and which channels can you actually run?
 4. Is Search Console, analytics, a prompt tracker, or an ad account connected?
 5. Can the agent sign up, book a demo, or buy under your name, which inbox should it use, and what's the purchase budget?
@@ -291,7 +305,9 @@ In `teardowns/<target>/`:
 ## Related Skills
 
 - **competitor-profiling**: snapshot of positioning, pricing, features, and SEO
-- **competitors**: comparison and alternative pages from what you learn
+- **competitors**: comparison and alternative pages from what you learn, including the weak spots
+- **product-marketing**: positioning built on where competitors are weak
+- **customer-research**: voice of customer from competitors' reviews
 - **marketing-loops**: the growth-move watch loop and the loops behind each play
 - **social**: why one post went viral, and writing the posts the plays call for
 - **ad-creative**: reading and producing ad creative
