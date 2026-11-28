@@ -1,7 +1,7 @@
 {
   "format": "unimate-pack-index",
   "format_version": 1,
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "store": {
     "name": "Kho cài đặt UNI MATE",
     "url": "https://github.com/U-N-I-MATE/unimate-store"
@@ -3438,7 +3438,7 @@
         "vi": "Bộ skill của Matt Pocock: thiết kế codebase, chẩn đoán lỗi, TDD, viết spec và chia ticket, review code, nguyên mẫu nhanh, cùng các skill làm việc như hỏi vặn ý tưởng (grill-me), bàn giao, viết cho AI agent.",
         "en": "Matt Pocock's skills: codebase design, diagnosing bugs, TDD, writing specs and splitting tickets, code review, quick prototypes, plus working skills such as grill-me, handoffs and writing for agents."
       },
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "Matt Pocock",
         "url": "https://github.com/mattpocock/skills"
@@ -3450,15 +3450,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-25",
+      "updated": "2026-11-28",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.mattpocock",
       "source": "https://github.com/mattpocock/skills",
       "license": "MIT",
       "upstream": {
         "repo": "mattpocock/skills",
         "ref": "main",
-        "commit": "6f7f7831a625f040a8e06a0e7954826b87ce775a",
-        "synced": "2026-11-25"
+        "commit": "bbadaa631c37af594e5a05c9cefacd9956136b18",
+        "synced": "2026-11-28"
       },
       "provides": {
         "skills": [
@@ -3492,8 +3492,8 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-mattpocock-1.0.3.zip",
-        "sha256": "2a9ba85b2947bc0b34fcde4f039b34481d90ba9ecc45a8bf24ff6c7f1b35c239",
+        "url": "dist/unimate-mattpocock-1.0.4.zip",
+        "sha256": "306fa351922deda316e7e2caaf7f401ca544e1fa57997c62a910844c2e4892ec",
         "size": 113591
       }
     },
@@ -3508,7 +3508,7 @@
         "vi": "Skill của REA (Reverse Engineer Anything), repo AI đang nổi nhất GitHub: phân tích app Electron/JavaScript, tệp chạy, firmware và trang web khi không có mã nguồn, so sánh phiên bản, dịch ngược. Cần cài công cụ rea (npm rea-agents).",
         "en": "The REA (Reverse Engineer Anything) skill, GitHub's top trending AI repo: analyse Electron/JavaScript apps, binaries, firmware and web apps without their source, compare versions, decompile. Needs the rea tool (npm rea-agents)."
       },
-      "version": "1.0.24",
+      "version": "1.0.25",
       "author": {
         "name": "morluto",
         "url": "https://github.com/morluto/rea"
@@ -3520,15 +3520,15 @@
       },
       "tier": "data",
       "verified": true,
-      "updated": "2026-11-27",
+      "updated": "2026-11-28",
       "homepage": "https://github.com/U-N-I-MATE/unimate-store/tree/main/packs/unimate.rea",
       "source": "https://github.com/morluto/rea",
       "license": "MIT",
       "upstream": {
         "repo": "morluto/rea",
         "ref": "main",
-        "commit": "dc12e5768b57ae8b78dec5c3eb453929b255cf7f",
-        "synced": "2026-11-27"
+        "commit": "0c7ebd68c4818a55cdd013ac73ccd9b41e141e07",
+        "synced": "2026-11-28"
       },
       "provides": {
         "skills": [
@@ -3536,9 +3536,9 @@
         ]
       },
       "download": {
-        "url": "dist/unimate-rea-1.0.24.zip",
-        "sha256": "da9b6acf639d76d3b62b1188e4325d02be305237f3cf8ba71419905c4b502c60",
-        "size": 96771
+        "url": "dist/unimate-rea-1.0.25.zip",
+        "sha256": "64ba5f6b2563be04ace1f0e7ec8acf4bd1619107a2f248ffd6fd6f458279df1a",
+        "size": 99266
       }
     },
     {
